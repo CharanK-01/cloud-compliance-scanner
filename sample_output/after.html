@@ -1,0 +1,1787 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AWS Cloud Security Compliance Report - ISO 27001:2022</title>
+  <style>
+    :root {
+      --bg: #0b0f19;
+      --card-bg: #121826;
+      --card-border: #1f293d;
+      --text-main: #f3f4f6;
+      --text-muted: #9ca3af;
+      --accent-blue: #3b82f6;
+      --accent-cyan: #06b6d4;
+      --critical: #ef4444;
+      --high: #f97316;
+      --medium: #f59e0b;
+      --low: #10b981;
+      --pass: #10b981;
+      --fail: #ef4444;
+      --error: #ec4899;
+      --na: #6b7280;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background-color: var(--bg);
+      color: var(--text-main);
+      line-height: 1.5;
+      padding: 2rem 1.5rem;
+    }
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+    header {
+      background: linear-gradient(135deg, rgba(30, 41, 59, 0.7), rgba(15, 23, 42, 0.9));
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    }
+    .header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 1rem;
+      border-bottom: 1px solid var(--card-border);
+      padding-bottom: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .brand h1 {
+      font-size: 1.85rem;
+      font-weight: 700;
+      background: linear-gradient(90deg, #60a5fa, #34d399);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: -0.02em;
+    }
+    .brand p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin-top: 0.35rem;
+    }
+    .meta-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+    .badge {
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 0.35rem 0.75rem;
+      border-radius: 9999px;
+      border: 1px solid transparent;
+    }
+    .badge-info { background: rgba(59, 130, 246, 0.15); color: #93c5fd; border-color: rgba(59, 130, 246, 0.3); }
+    .badge-scope { background: rgba(16, 185, 129, 0.15); color: #6ee7b7; border-color: rgba(16, 185, 129, 0.3); }
+    
+    .meta-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      font-size: 0.875rem;
+    }
+    .meta-item {
+      color: var(--text-muted);
+    }
+    .meta-item strong {
+      color: var(--text-main);
+      display: block;
+      margin-top: 0.15rem;
+    }
+
+    /* Executive Score Cards */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.25rem;
+      margin-bottom: 2rem;
+    }
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+    }
+    .score-card {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+    .score-value {
+      font-size: 3rem;
+      font-weight: 800;
+      line-height: 1;
+      margin: 0.5rem 0;
+    }
+    .score-good { color: var(--pass); }
+    .score-warn { color: var(--medium); }
+    .score-bad { color: var(--critical); }
+    .card-title {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-weight: 600;
+    }
+
+    /* Severity Breakdown Bar */
+    .severity-bar-container {
+      margin-top: 1rem;
+      display: flex;
+      height: 12px;
+      border-radius: 6px;
+      overflow: hidden;
+      background: #1f293d;
+    }
+    .severity-seg { height: 100%; }
+    .seg-critical { background: var(--critical); }
+    .seg-high { background: var(--high); }
+    .seg-medium { background: var(--medium); }
+    .seg-low { background: var(--low); }
+
+    .severity-pills {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+    .sev-pill {
+      border-radius: 6px;
+      padding: 0.5rem;
+      text-align: center;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--card-border);
+    }
+    .sev-pill span { display: block; font-size: 0.75rem; color: var(--text-muted); }
+    .sev-pill strong { font-size: 1.25rem; font-weight: 700; }
+
+    /* Top 5 Risks */
+    .top-risks {
+      margin-bottom: 2rem;
+    }
+    .top-risks-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+      font-size: 0.9rem;
+    }
+    .top-risks-table th, .top-risks-table td {
+      padding: 0.85rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--card-border);
+    }
+    .top-risks-table th {
+      background: rgba(31, 41, 61, 0.4);
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* ISO 27001 Coverage Matrix */
+    .section-title {
+      font-size: 1.35rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: #e5e7eb;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .section-subtitle {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-bottom: 1.25rem;
+    }
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.875rem;
+    }
+    .data-table th, .data-table td {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--card-border);
+    }
+    .data-table th {
+      background: rgba(31, 41, 61, 0.5);
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .data-table tr:hover {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    /* Pill Badges */
+    .pill {
+      display: inline-block;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+    .pill-pass { background: rgba(16, 185, 129, 0.15); color: #34d399; }
+    .pill-fail { background: rgba(239, 68, 68, 0.15); color: #f87171; }
+    .pill-error { background: rgba(236, 72, 153, 0.15); color: #f472b6; }
+    .pill-na { background: rgba(107, 114, 128, 0.2); color: #9ca3af; }
+
+    .sev-critical { color: var(--critical); font-weight: 700; }
+    .sev-high { color: var(--high); font-weight: 700; }
+    .sev-medium { color: var(--medium); font-weight: 700; }
+    .sev-low { color: var(--low); font-weight: 700; }
+
+    /* Filters & Findings */
+    .controls-panel {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+    }
+    .search-box {
+      background: #1a2234;
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 0.6rem 1rem;
+      color: var(--text-main);
+      font-size: 0.875rem;
+      width: 280px;
+    }
+    .filter-buttons {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .filter-btn {
+      background: #1a2234;
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+      padding: 0.4rem 0.8rem;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .filter-btn.active, .filter-btn:hover {
+      background: var(--accent-blue);
+      color: #fff;
+      border-color: var(--accent-blue);
+    }
+
+    .finding-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 1.25rem;
+      margin-bottom: 1rem;
+      transition: border-color 0.2s;
+    }
+    .finding-card.fail { border-left: 4px solid var(--fail); }
+    .finding-card.pass { border-left: 4px solid var(--pass); }
+    .finding-card.error { border-left: 4px solid var(--error); }
+    .finding-card.na { border-left: 4px solid var(--na); }
+
+    .finding-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 0.75rem;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .finding-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+    .finding-res {
+      font-family: monospace;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      background: rgba(0,0,0,0.3);
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      margin-top: 0.25rem;
+      display: inline-block;
+      word-break: break-all;
+    }
+    .finding-details {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.75rem;
+      margin-top: 0.75rem;
+      font-size: 0.85rem;
+    }
+    .remediation-box {
+      background: rgba(59, 130, 246, 0.08);
+      border: 1px solid rgba(59, 130, 246, 0.2);
+      border-radius: 6px;
+      padding: 0.75rem 1rem;
+      color: #bfdbfe;
+    }
+    .remediation-box strong { color: #60a5fa; }
+    .evidence-toggle {
+      background: none;
+      border: none;
+      color: var(--accent-blue);
+      cursor: pointer;
+      font-size: 0.8rem;
+      text-decoration: underline;
+      padding: 0;
+      margin-top: 0.5rem;
+    }
+    pre.evidence-json {
+      background: #080c14;
+      border: 1px solid var(--card-border);
+      border-radius: 6px;
+      padding: 0.75rem;
+      font-size: 0.75rem;
+      color: #a7f3d0;
+      overflow-x: auto;
+      max-height: 250px;
+      margin-top: 0.5rem;
+    }
+
+    footer {
+      margin-top: 3rem;
+      padding: 2rem;
+      background: #0d121e;
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+    .footer-sha {
+      font-family: monospace;
+      background: rgba(0,0,0,0.4);
+      padding: 0.4rem 0.75rem;
+      border-radius: 4px;
+      color: #38bdf8;
+      display: inline-block;
+      margin-top: 0.35rem;
+      word-break: break-all;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header>
+      <div class="header-top">
+        <div class="brand">
+          <h1>AWS Cloud Security Compliance Scanner</h1>
+          <p>ISO 27001:2022 Annex A Alignment & Cyber Risk Audit Report</p>
+        </div>
+        <div class="meta-badges">
+          <span class="badge badge-info">v1.0.0</span>
+          <span class="badge badge-scope">Read-Only Audit</span>
+          <span class="badge badge-info">ISO 27001:2022</span>
+        </div>
+      </div>
+      <div class="meta-grid">
+        <div class="meta-item">
+          <span>AWS Account ID</span>
+          <strong>123456789012</strong>
+        </div>
+        <div class="meta-item">
+          <span>Scan Timestamp</span>
+          <strong>2026-09-30 17:24:04 UTC</strong>
+        </div>
+        <div class="meta-item">
+          <span>Duration</span>
+          <strong>4.31s</strong>
+        </div>
+        <div class="meta-item">
+          <span>Regions Scanned</span>
+          <strong>us-east-1</strong>
+        </div>
+      </div>
+    </header>
+
+    <!-- Executive Metrics -->
+    <div class="metrics-grid">
+      <div class="card score-card">
+        <div class="card-title">Overall Posture Score</div>
+        
+        <div class="score-value score-good">
+          92.9%
+        </div>
+        <span style="font-size:0.8rem; color:var(--text-muted);">Risk-weighted evaluation</span>
+      </div>
+
+      <div class="card score-card">
+        <div class="card-title">Audit Coverage</div>
+        <div class="score-value score-good">100.0%</div>
+        <span style="font-size:0.8rem; color:var(--text-muted);">28 of 28 evaluations executed</span>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Risk Severity Breakdown</div>
+        
+        
+        
+        
+        
+        <div class="severity-bar-container">
+          
+          <div class="severity-seg seg-critical" style="width: 0.0%;"></div>
+          <div class="severity-seg seg-high" style="width: 0.0%;"></div>
+          <div class="severity-seg seg-medium" style="width: 66.66666666666666%;"></div>
+          <div class="severity-seg seg-low" style="width: 33.33333333333333%;"></div>
+          
+        </div>
+        <div class="severity-pills">
+          <div class="sev-pill"><span class="sev-critical">Critical</span><strong>0</strong></div>
+          <div class="sev-pill"><span class="sev-high">High</span><strong>0</strong></div>
+          <div class="sev-pill"><span class="sev-medium">Medium</span><strong>2</strong></div>
+          <div class="sev-pill"><span class="sev-low">Low</span><strong>1</strong></div>
+        </div>
+      </div>
+
+      <div class="card score-card">
+        <div class="card-title">Findings Outcome</div>
+        <div style="display:flex; justify-content:space-around; width:100%; margin-top:1rem;">
+          <div><strong style="font-size:1.5rem; color:var(--pass);">25</strong><br><span style="font-size:0.75rem; color:var(--text-muted);">PASS</span></div>
+          <div><strong style="font-size:1.5rem; color:var(--fail);">3</strong><br><span style="font-size:0.75rem; color:var(--text-muted);">FAIL</span></div>
+          <div><strong style="font-size:1.5rem; color:var(--error);">0</strong><br><span style="font-size:0.75rem; color:var(--text-muted);">ERROR</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Top 5 Priority Risks -->
+    
+    <section class="card top-risks">
+      <div class="section-title">🚨 Top Priority Compliance Risks</div>
+      <p class="section-subtitle">High-impact misconfigurations requiring immediate remediation.</p>
+      <table class="top-risks-table">
+        <thead>
+          <tr>
+            <th>Check ID</th>
+            <th>Title</th>
+            <th>Service</th>
+            <th>Resource</th>
+            <th>Risk</th>
+            <th>ISO Controls</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+          <tr>
+            <td><strong>IAM-005</strong></td>
+            <td>IAM access keys rotated within 90 days</td>
+            <td><span class="pill pill-na">iam</span></td>
+            <td><span class="finding-res">arn:aws:iam::123456789012:user/dev:key-1</span></td>
+            <td><span class="sev-medium">Medium (9)</span></td>
+            <td>A.5.17, A.5.18</td>
+          </tr>
+          
+          <tr>
+            <td><strong>IAM-006</strong></td>
+            <td>No unused IAM credentials over 90 days</td>
+            <td><span class="pill pill-na">iam</span></td>
+            <td><span class="finding-res">arn:aws:iam::123456789012:user/contractor:password</span></td>
+            <td><span class="sev-medium">Medium (9)</span></td>
+            <td>A.5.18</td>
+          </tr>
+          
+          <tr>
+            <td><strong>S3-005</strong></td>
+            <td>S3 server access logging enabled</td>
+            <td><span class="pill pill-na">s3</span></td>
+            <td><span class="finding-res">arn:aws:s3:::compliance-lab-insecure-123456789012</span></td>
+            <td><span class="sev-low">Low (4)</span></td>
+            <td>A.8.15</td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </section>
+    
+
+    <!-- ISO 27001 Annex A Coverage -->
+    <section class="card" style="margin-bottom: 2rem;">
+      <div class="section-title">🛡️ ISO 27001:2022 Annex A Control Coverage</div>
+      <p class="section-subtitle">Evaluation matrix showing compliance rates per Annex A security control.</p>
+      <div style="overflow-x:auto;">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Annex A Control</th>
+              <th>Control Description</th>
+              <th>Mapped Checks</th>
+              <th>Passed</th>
+              <th>Failed</th>
+              <th>Compliance %</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+            <tr>
+              <td><strong>A.5.14</strong></td>
+              <td>Information transfer</td>
+              <td><code>S3-006</code></td>
+              <td style="color:var(--pass);">1</td>
+              <td style="color:var(--fail);">0</td>
+              <td>
+                <div style="display:flex; align-items:center; gap:0.5rem;">
+                  <span><strong>100.0%</strong></span>
+                  <div style="flex:1; height:6px; background:#1f293d; border-radius:3px; overflow:hidden; min-width:60px;">
+                    <div style="width:100.0%; height:100%; background:var(--pass);"></div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                
+                  <span class="pill pill-pass">Compliant</span>
+                
+              </td>
+            </tr>
+            
+            <tr>
+              <td><strong>A.5.15</strong></td>
+              <td>Access control</td>
+              <td><code>IAM-002, IAM-007, IAM-008, S3-001</code></td>
+              <td style="color:var(--pass);">4</td>
+              <td style="color:var(--fail);">0</td>
+              <td>
+                <div style="display:flex; align-items:center; gap:0.5rem;">
+                  <span><strong>100.0%</strong></span>
+                  <div style="flex:1; height:6px; background:#1f293d; border-radius:3px; overflow:hidden; min-width:60px;">
+                    <div style="width:100.0%; height:100%; background:var(--pass);"></div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                
+                  <span class="pill pill-pass">Compliant</span>
+                
+              </td>
+            </tr>
+            
+            <tr>
+              <td><strong>A.5.17</strong></td>
+              <td>Authentication information</td>
+              <td><code>IAM-004, IAM-005</code></td>
+              <td style="color:var(--pass);">1</td>
+              <td style="color:var(--fail);">1</td>
+              <td>
+                <div style="display:flex; align-items:center; gap:0.5rem;">
+                  <span><strong>50.0%</strong></span>
+                  <div style="flex:1; height:6px; background:#1f293d; border-radius:3px; overflow:hidden; min-width:60px;">
+                    <div style="width:50.0%; height:100%; background:var(--medium);"></div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                
+                  <span class="pill pill-fail">Non-Compliant</span>
+                
+              </td>
+            </tr>
+            
+            <tr>
+              <td><strong>A.5.18</strong></td>
+              <td>Access rights</td>
+              <td><code>IAM-005, IAM-006, IAM-008</code></td>
+              <td style="color:var(--pass);">1</td>
+              <td style="color:var(--fail);">2</td>
+              <td>
+                <div style="display:flex; align-items:center; gap:0.5rem;">
+                  <span><strong>33.33%</strong></span>
+                  <div style="flex:1; height:6px; background:#1f293d; border-radius:3px; overflow:hidden; min-width:60px;">
+                    <div style="width:33.33%; height:100%; background:var(--critical);"></div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                
+                  <span class="pill pill-fail">Non-Compliant</span>
+                
+              </td>
+            </tr>
+            
+            <tr>
+              <td><strong>A.5.30</strong></td>
+              <td>ICT readiness for business continuity</td>
+              <td><code>RDS-003, RDS-004</code></td>
+              <td style="color:var(--pass);">2</td>
+              <td style="color:var(--fail);">0</td>
+              <td>
+                <div style="display:flex; align-items:center; gap:0.5rem;">
+                  <span><strong>100.0%</strong></span>
+                  <div style="flex:1; height:6px; background:#1f293d; border-radius:3px; overflow:hidden; min-width:60px;">
+                    <div style="width:100.0%; height:100%; background:var(--pass);"></div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                
+                  <span class="pill pill-pass">Compliant</span>
+                
+              </td>
+            </tr>
+            
+            <tr>
+              <td><strong>A.5.33</strong></td>
+              <td>Protection of records</td>
+              <td><code>LOG-002</code></td>
+              <td style="color:var(--pass);">1</td>
+              <td style="color:var(--fail);">0</td>
+              <td>
+                <div style="display:flex; align-items:center; gap:0.5rem;">
+                  <span><strong>100.0%</strong></span>
+                  <div style="flex:1; height:6px; background:#1f293d; border-radius:3px; overflow:hidden; min-width:60px;">
+                    <div style="width:100.0%; height:100%; background:var(--pass);"></div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                
+                  <span class="pill pill-pass">Compliant</span>
+                
+              </td>
+            </tr>
+            
+            <tr>
+              <td><strong>A.8.13</strong></td>
+              <td>Information backup</td>
+              <td><code>RDS-003, S3-004</code></td>
+              <td style="color:var(--pass);">2</td>
+              <td style="color:var(--fail);">0</td>
+              <td>
+                <div style="display:flex; align-items:center; gap:0.5rem;">
+                  <span><strong>100.0%</strong></span>
+                  <div style="flex:1; height:6px; background:#1f293d; border-radius:3px; overflow:hidden; min-width:60px;">
+                    <div style="width:100.0%; height:100%; background:var(--pass);"></div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                
+                  <span class="pill pill-pass">Compliant</span>
+                
+              </td>
+            </tr>
+            
+            <tr>
+              <td><strong>A.8.14</strong></td>
+              <td>Redundancy of information processing facilities</td>
+              <td><code>RDS-004</code></td>
+              <td style="color:var(--pass);">1</td>
+              <td style="color:var(--fail);">0</td>
+              <td>
+                <div style="display:flex; align-items:center; gap:0.5rem;">
+                  <span><strong>100.0%</strong></span>
+                  <div style="flex:1; height:6px; background:#1f293d; border-radius:3px; overflow:hidden; min-width:60px;">
+                    <div style="width:100.0%; height:100%; background:var(--pass);"></div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                
+                  <span class="pill pill-pass">Compliant</span>
+                
+              </td>
+            </tr>
+            
+            <tr>
+              <td><strong>A.8.15</strong></td>
+              <td>Logging</td>
+              <td><code>LOG-001, LOG-002, NET-005, S3-005</code></td>
+              <td style="color:var(--pass);">3</td>
+              <td style="color:var(--fail);">1</td>
+              <td>
+                <div style="display:flex; align-items:center; gap:0.5rem;">
+                  <span><strong>75.0%</strong></span>
+                  <div style="flex:1; height:6px; background:#1f293d; border-radius:3px; overflow:hidden; min-width:60px;">
+                    <div style="width:75.0%; height:100%; background:var(--medium);"></div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                
+                  <span class="pill pill-fail">Non-Compliant</span>
+                
+              </td>
+            </tr>
+            
+            <tr>
+              <td><strong>A.8.16</strong></td>
+              <td>Monitoring activities</td>
+              <td><code>LOG-004, NET-005</code></td>
+              <td style="color:var(--pass);">2</td>
+              <td style="color:var(--fail);">0</td>
+              <td>
+                <div style="display:flex; align-items:center; gap:0.5rem;">
+                  <span><strong>100.0%</strong></span>
+                  <div style="flex:1; height:6px; background:#1f293d; border-radius:3px; overflow:hidden; min-width:60px;">
+                    <div style="width:100.0%; height:100%; background:var(--pass);"></div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                
+                  <span class="pill pill-pass">Compliant</span>
+                
+              </td>
+            </tr>
+            
+            <tr>
+              <td><strong>A.8.2</strong></td>
+              <td>Privileged access rights</td>
+              <td><code>IAM-001, IAM-002, IAM-007</code></td>
+              <td style="color:var(--pass);">3</td>
+              <td style="color:var(--fail);">0</td>
+              <td>
+                <div style="display:flex; align-items:center; gap:0.5rem;">
+                  <span><strong>100.0%</strong></span>
+                  <div style="flex:1; height:6px; background:#1f293d; border-radius:3px; overflow:hidden; min-width:60px;">
+                    <div style="width:100.0%; height:100%; background:var(--pass);"></div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                
+                  <span class="pill pill-pass">Compliant</span>
+                
+              </td>
+            </tr>
+            
+            <tr>
+              <td><strong>A.8.20</strong></td>
+              <td>Network controls</td>
+              <td><code>NET-001, NET-002, RDS-002</code></td>
+              <td style="color:var(--pass);">3</td>
+              <td style="color:var(--fail);">0</td>
+              <td>
+                <div style="display:flex; align-items:center; gap:0.5rem;">
+                  <span><strong>100.0%</strong></span>
+                  <div style="flex:1; height:6px; background:#1f293d; border-radius:3px; overflow:hidden; min-width:60px;">
+                    <div style="width:100.0%; height:100%; background:var(--pass);"></div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                
+                  <span class="pill pill-pass">Compliant</span>
+                
+              </td>
+            </tr>
+            
+            <tr>
+              <td><strong>A.8.22</strong></td>
+              <td>Segregation of networks</td>
+              <td><code>NET-001</code></td>
+              <td style="color:var(--pass);">1</td>
+              <td style="color:var(--fail);">0</td>
+              <td>
+                <div style="display:flex; align-items:center; gap:0.5rem;">
+                  <span><strong>100.0%</strong></span>
+                  <div style="flex:1; height:6px; background:#1f293d; border-radius:3px; overflow:hidden; min-width:60px;">
+                    <div style="width:100.0%; height:100%; background:var(--pass);"></div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                
+                  <span class="pill pill-pass">Compliant</span>
+                
+              </td>
+            </tr>
+            
+            <tr>
+              <td><strong>A.8.24</strong></td>
+              <td>Use of cryptography</td>
+              <td><code>KMS-001, NET-003, NET-004, RDS-001, S3-003, S3-006</code></td>
+              <td style="color:var(--pass);">6</td>
+              <td style="color:var(--fail);">0</td>
+              <td>
+                <div style="display:flex; align-items:center; gap:0.5rem;">
+                  <span><strong>100.0%</strong></span>
+                  <div style="flex:1; height:6px; background:#1f293d; border-radius:3px; overflow:hidden; min-width:60px;">
+                    <div style="width:100.0%; height:100%; background:var(--pass);"></div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                
+                  <span class="pill pill-pass">Compliant</span>
+                
+              </td>
+            </tr>
+            
+            <tr>
+              <td><strong>A.8.3</strong></td>
+              <td>Information access restriction</td>
+              <td><code>RDS-002, S3-001, S3-002</code></td>
+              <td style="color:var(--pass);">3</td>
+              <td style="color:var(--fail);">0</td>
+              <td>
+                <div style="display:flex; align-items:center; gap:0.5rem;">
+                  <span><strong>100.0%</strong></span>
+                  <div style="flex:1; height:6px; background:#1f293d; border-radius:3px; overflow:hidden; min-width:60px;">
+                    <div style="width:100.0%; height:100%; background:var(--pass);"></div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                
+                  <span class="pill pill-pass">Compliant</span>
+                
+              </td>
+            </tr>
+            
+            <tr>
+              <td><strong>A.8.5</strong></td>
+              <td>Secure authentication</td>
+              <td><code>IAM-001, IAM-003</code></td>
+              <td style="color:var(--pass);">2</td>
+              <td style="color:var(--fail);">0</td>
+              <td>
+                <div style="display:flex; align-items:center; gap:0.5rem;">
+                  <span><strong>100.0%</strong></span>
+                  <div style="flex:1; height:6px; background:#1f293d; border-radius:3px; overflow:hidden; min-width:60px;">
+                    <div style="width:100.0%; height:100%; background:var(--pass);"></div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                
+                  <span class="pill pill-pass">Compliant</span>
+                
+              </td>
+            </tr>
+            
+            <tr>
+              <td><strong>A.8.9</strong></td>
+              <td>Configuration management</td>
+              <td><code>LOG-003</code></td>
+              <td style="color:var(--pass);">1</td>
+              <td style="color:var(--fail);">0</td>
+              <td>
+                <div style="display:flex; align-items:center; gap:0.5rem;">
+                  <span><strong>100.0%</strong></span>
+                  <div style="flex:1; height:6px; background:#1f293d; border-radius:3px; overflow:hidden; min-width:60px;">
+                    <div style="width:100.0%; height:100%; background:var(--pass);"></div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                
+                  <span class="pill pill-pass">Compliant</span>
+                
+              </td>
+            </tr>
+            
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Detailed Findings Section -->
+    <section>
+      <div class="controls-panel">
+        <div>
+          <div class="section-title">🔍 Detailed Audit Findings (28)</div>
+          <p class="section-subtitle" style="margin:0;">Individual evaluated resource configurations with evidence and remediation.</p>
+        </div>
+        <div style="display:flex; gap:0.75rem; flex-wrap:wrap;">
+          <input type="text" id="searchInput" class="search-box" placeholder="Search check, resource, ID..." onkeyup="filterFindings()">
+          <div class="filter-buttons">
+            <button class="filter-btn active" onclick="setFilter('ALL', this)">All</button>
+            <button class="filter-btn" onclick="setFilter('FAIL', this)">Fail</button>
+            <button class="filter-btn" onclick="setFilter('PASS', this)">Pass</button>
+            <button class="filter-btn" onclick="setFilter('ERROR', this)">Error</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="findingsContainer">
+        
+        <div class="finding-card pass" data-status="PASS" data-severity="Critical" data-text="IAM-001 Root account has MFA enabled arn:aws:iam::123456789012:root iam us-east-1">
+          <div class="finding-header">
+            <div>
+              <span class="pill pill-pass">PASS</span>
+              <strong style="margin-left: 0.5rem; color: #93c5fd;">IAM-001</strong>: 
+              <span class="finding-title">Root account has MFA enabled</span>
+              <div><span class="finding-res">arn:aws:iam::123456789012:root</span></div>
+            </div>
+            <div style="text-align: right;">
+              <span class="sev-critical">Critical</span>
+              <div style="font-size:0.75rem; color:var(--text-muted);">Risk: 20/25 | us-east-1</div>
+            </div>
+          </div>
+
+          <div class="finding-details">
+            
+
+            <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.8rem; color:var(--text-muted);">
+              <div>ISO Controls: <strong>A.8.5, A.8.2</strong></div>
+              <button class="evidence-toggle" onclick="toggleEvidence('ev-1')">View Evidence JSON</button>
+            </div>
+
+            <pre id="ev-1" class="evidence-json" style="display:none;">{
+  "evidence": "Compliant configuration verified",
+  "remediated": true
+}</pre>
+          </div>
+        </div>
+        
+        <div class="finding-card pass" data-status="PASS" data-severity="High" data-text="IAM-002 No root account active access keys arn:aws:iam::123456789012:root iam us-east-1">
+          <div class="finding-header">
+            <div>
+              <span class="pill pill-pass">PASS</span>
+              <strong style="margin-left: 0.5rem; color: #93c5fd;">IAM-002</strong>: 
+              <span class="finding-title">No root account active access keys</span>
+              <div><span class="finding-res">arn:aws:iam::123456789012:root</span></div>
+            </div>
+            <div style="text-align: right;">
+              <span class="sev-high">High</span>
+              <div style="font-size:0.75rem; color:var(--text-muted);">Risk: 16/25 | us-east-1</div>
+            </div>
+          </div>
+
+          <div class="finding-details">
+            
+
+            <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.8rem; color:var(--text-muted);">
+              <div>ISO Controls: <strong>A.8.2, A.5.15</strong></div>
+              <button class="evidence-toggle" onclick="toggleEvidence('ev-2')">View Evidence JSON</button>
+            </div>
+
+            <pre id="ev-2" class="evidence-json" style="display:none;">{
+  "evidence": "Compliant configuration verified",
+  "remediated": true
+}</pre>
+          </div>
+        </div>
+        
+        <div class="finding-card pass" data-status="PASS" data-severity="High" data-text="IAM-003 All console users have MFA enabled arn:aws:iam::123456789012:user/admin-bob iam us-east-1">
+          <div class="finding-header">
+            <div>
+              <span class="pill pill-pass">PASS</span>
+              <strong style="margin-left: 0.5rem; color: #93c5fd;">IAM-003</strong>: 
+              <span class="finding-title">All console users have MFA enabled</span>
+              <div><span class="finding-res">arn:aws:iam::123456789012:user/admin-bob</span></div>
+            </div>
+            <div style="text-align: right;">
+              <span class="sev-high">High</span>
+              <div style="font-size:0.75rem; color:var(--text-muted);">Risk: 12/25 | us-east-1</div>
+            </div>
+          </div>
+
+          <div class="finding-details">
+            
+
+            <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.8rem; color:var(--text-muted);">
+              <div>ISO Controls: <strong>A.8.5</strong></div>
+              <button class="evidence-toggle" onclick="toggleEvidence('ev-3')">View Evidence JSON</button>
+            </div>
+
+            <pre id="ev-3" class="evidence-json" style="display:none;">{
+  "evidence": "Compliant configuration verified",
+  "remediated": true
+}</pre>
+          </div>
+        </div>
+        
+        <div class="finding-card pass" data-status="PASS" data-severity="Medium" data-text="IAM-004 Strong account password policy enforced arn:aws:iam::123456789012:password-policy iam us-east-1">
+          <div class="finding-header">
+            <div>
+              <span class="pill pill-pass">PASS</span>
+              <strong style="margin-left: 0.5rem; color: #93c5fd;">IAM-004</strong>: 
+              <span class="finding-title">Strong account password policy enforced</span>
+              <div><span class="finding-res">arn:aws:iam::123456789012:password-policy</span></div>
+            </div>
+            <div style="text-align: right;">
+              <span class="sev-medium">Medium</span>
+              <div style="font-size:0.75rem; color:var(--text-muted);">Risk: 9/25 | us-east-1</div>
+            </div>
+          </div>
+
+          <div class="finding-details">
+            
+
+            <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.8rem; color:var(--text-muted);">
+              <div>ISO Controls: <strong>A.5.17</strong></div>
+              <button class="evidence-toggle" onclick="toggleEvidence('ev-4')">View Evidence JSON</button>
+            </div>
+
+            <pre id="ev-4" class="evidence-json" style="display:none;">{
+  "evidence": "Compliant configuration verified",
+  "remediated": true
+}</pre>
+          </div>
+        </div>
+        
+        <div class="finding-card fail" data-status="FAIL" data-severity="Medium" data-text="IAM-005 IAM access keys rotated within 90 days arn:aws:iam::123456789012:user/dev:key-1 iam us-east-1">
+          <div class="finding-header">
+            <div>
+              <span class="pill pill-fail">FAIL</span>
+              <strong style="margin-left: 0.5rem; color: #93c5fd;">IAM-005</strong>: 
+              <span class="finding-title">IAM access keys rotated within 90 days</span>
+              <div><span class="finding-res">arn:aws:iam::123456789012:user/dev:key-1</span></div>
+            </div>
+            <div style="text-align: right;">
+              <span class="sev-medium">Medium</span>
+              <div style="font-size:0.75rem; color:var(--text-muted);">Risk: 9/25 | us-east-1</div>
+            </div>
+          </div>
+
+          <div class="finding-details">
+            
+            <div class="remediation-box">
+              <strong>Remediation:</strong> Create a new key pair for users with keys older than 90 days, update client applications, deactivate the old key, verify functionality, and delete the legacy key.
+            </div>
+            
+
+            <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.8rem; color:var(--text-muted);">
+              <div>ISO Controls: <strong>A.5.17, A.5.18</strong></div>
+              <button class="evidence-toggle" onclick="toggleEvidence('ev-5')">View Evidence JSON</button>
+            </div>
+
+            <pre id="ev-5" class="evidence-json" style="display:none;">{
+  "age_days": 182
+}</pre>
+          </div>
+        </div>
+        
+        <div class="finding-card fail" data-status="FAIL" data-severity="Medium" data-text="IAM-006 No unused IAM credentials over 90 days arn:aws:iam::123456789012:user/contractor:password iam us-east-1">
+          <div class="finding-header">
+            <div>
+              <span class="pill pill-fail">FAIL</span>
+              <strong style="margin-left: 0.5rem; color: #93c5fd;">IAM-006</strong>: 
+              <span class="finding-title">No unused IAM credentials over 90 days</span>
+              <div><span class="finding-res">arn:aws:iam::123456789012:user/contractor:password</span></div>
+            </div>
+            <div style="text-align: right;">
+              <span class="sev-medium">Medium</span>
+              <div style="font-size:0.75rem; color:var(--text-muted);">Risk: 9/25 | us-east-1</div>
+            </div>
+          </div>
+
+          <div class="finding-details">
+            
+            <div class="remediation-box">
+              <strong>Remediation:</strong> Review dormant IAM users and credentials unused for 90+ days. Deactivate or delete stale access keys and remove console access passwords.
+            </div>
+            
+
+            <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.8rem; color:var(--text-muted);">
+              <div>ISO Controls: <strong>A.5.18</strong></div>
+              <button class="evidence-toggle" onclick="toggleEvidence('ev-6')">View Evidence JSON</button>
+            </div>
+
+            <pre id="ev-6" class="evidence-json" style="display:none;">{
+  "days_unused": 140
+}</pre>
+          </div>
+        </div>
+        
+        <div class="finding-card pass" data-status="PASS" data-severity="High" data-text="IAM-007 No wildcard admin policies attached arn:aws:iam::123456789012:policy/WildcardAdmin iam us-east-1">
+          <div class="finding-header">
+            <div>
+              <span class="pill pill-pass">PASS</span>
+              <strong style="margin-left: 0.5rem; color: #93c5fd;">IAM-007</strong>: 
+              <span class="finding-title">No wildcard admin policies attached</span>
+              <div><span class="finding-res">arn:aws:iam::123456789012:policy/WildcardAdmin</span></div>
+            </div>
+            <div style="text-align: right;">
+              <span class="sev-high">High</span>
+              <div style="font-size:0.75rem; color:var(--text-muted);">Risk: 16/25 | us-east-1</div>
+            </div>
+          </div>
+
+          <div class="finding-details">
+            
+
+            <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.8rem; color:var(--text-muted);">
+              <div>ISO Controls: <strong>A.8.2, A.5.15</strong></div>
+              <button class="evidence-toggle" onclick="toggleEvidence('ev-7')">View Evidence JSON</button>
+            </div>
+
+            <pre id="ev-7" class="evidence-json" style="display:none;">{
+  "evidence": "Compliant configuration verified",
+  "remediated": true
+}</pre>
+          </div>
+        </div>
+        
+        <div class="finding-card pass" data-status="PASS" data-severity="Medium" data-text="IAM-008 Policies attached to groups or roles rather than individual users arn:aws:iam::123456789012:user/dev iam us-east-1">
+          <div class="finding-header">
+            <div>
+              <span class="pill pill-pass">PASS</span>
+              <strong style="margin-left: 0.5rem; color: #93c5fd;">IAM-008</strong>: 
+              <span class="finding-title">Policies attached to groups or roles rather than individual users</span>
+              <div><span class="finding-res">arn:aws:iam::123456789012:user/dev</span></div>
+            </div>
+            <div style="text-align: right;">
+              <span class="sev-medium">Medium</span>
+              <div style="font-size:0.75rem; color:var(--text-muted);">Risk: 6/25 | us-east-1</div>
+            </div>
+          </div>
+
+          <div class="finding-details">
+            
+
+            <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.8rem; color:var(--text-muted);">
+              <div>ISO Controls: <strong>A.5.15, A.5.18</strong></div>
+              <button class="evidence-toggle" onclick="toggleEvidence('ev-8')">View Evidence JSON</button>
+            </div>
+
+            <pre id="ev-8" class="evidence-json" style="display:none;">{
+  "evidence": "Compliant configuration verified",
+  "remediated": true
+}</pre>
+          </div>
+        </div>
+        
+        <div class="finding-card pass" data-status="PASS" data-severity="High" data-text="S3-001 S3 Block Public Access enabled at bucket and account level arn:aws:s3:::compliance-lab-insecure-123456789012 s3 us-east-1">
+          <div class="finding-header">
+            <div>
+              <span class="pill pill-pass">PASS</span>
+              <strong style="margin-left: 0.5rem; color: #93c5fd;">S3-001</strong>: 
+              <span class="finding-title">S3 Block Public Access enabled at bucket and account level</span>
+              <div><span class="finding-res">arn:aws:s3:::compliance-lab-insecure-123456789012</span></div>
+            </div>
+            <div style="text-align: right;">
+              <span class="sev-high">High</span>
+              <div style="font-size:0.75rem; color:var(--text-muted);">Risk: 15/25 | us-east-1</div>
+            </div>
+          </div>
+
+          <div class="finding-details">
+            
+
+            <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.8rem; color:var(--text-muted);">
+              <div>ISO Controls: <strong>A.8.3, A.5.15</strong></div>
+              <button class="evidence-toggle" onclick="toggleEvidence('ev-9')">View Evidence JSON</button>
+            </div>
+
+            <pre id="ev-9" class="evidence-json" style="display:none;">{
+  "evidence": "Compliant configuration verified",
+  "remediated": true
+}</pre>
+          </div>
+        </div>
+        
+        <div class="finding-card pass" data-status="PASS" data-severity="Critical" data-text="S3-002 No public S3 ACLs or public bucket policies arn:aws:s3:::compliance-lab-insecure-123456789012 s3 us-east-1">
+          <div class="finding-header">
+            <div>
+              <span class="pill pill-pass">PASS</span>
+              <strong style="margin-left: 0.5rem; color: #93c5fd;">S3-002</strong>: 
+              <span class="finding-title">No public S3 ACLs or public bucket policies</span>
+              <div><span class="finding-res">arn:aws:s3:::compliance-lab-insecure-123456789012</span></div>
+            </div>
+            <div style="text-align: right;">
+              <span class="sev-critical">Critical</span>
+              <div style="font-size:0.75rem; color:var(--text-muted);">Risk: 20/25 | us-east-1</div>
+            </div>
+          </div>
+
+          <div class="finding-details">
+            
+
+            <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.8rem; color:var(--text-muted);">
+              <div>ISO Controls: <strong>A.8.3</strong></div>
+              <button class="evidence-toggle" onclick="toggleEvidence('ev-10')">View Evidence JSON</button>
+            </div>
+
+            <pre id="ev-10" class="evidence-json" style="display:none;">{
+  "evidence": "Compliant configuration verified",
+  "remediated": true
+}</pre>
+          </div>
+        </div>
+        
+        <div class="finding-card pass" data-status="PASS" data-severity="Medium" data-text="S3-003 S3 default encryption enabled (SSE-KMS or SSE-S3) arn:aws:s3:::compliance-lab-insecure-123456789012 s3 us-east-1">
+          <div class="finding-header">
+            <div>
+              <span class="pill pill-pass">PASS</span>
+              <strong style="margin-left: 0.5rem; color: #93c5fd;">S3-003</strong>: 
+              <span class="finding-title">S3 default encryption enabled (SSE-KMS or SSE-S3)</span>
+              <div><span class="finding-res">arn:aws:s3:::compliance-lab-insecure-123456789012</span></div>
+            </div>
+            <div style="text-align: right;">
+              <span class="sev-medium">Medium</span>
+              <div style="font-size:0.75rem; color:var(--text-muted);">Risk: 6/25 | us-east-1</div>
+            </div>
+          </div>
+
+          <div class="finding-details">
+            
+
+            <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.8rem; color:var(--text-muted);">
+              <div>ISO Controls: <strong>A.8.24</strong></div>
+              <button class="evidence-toggle" onclick="toggleEvidence('ev-11')">View Evidence JSON</button>
+            </div>
+
+            <pre id="ev-11" class="evidence-json" style="display:none;">{
+  "evidence": "Compliant configuration verified",
+  "remediated": true
+}</pre>
+          </div>
+        </div>
+        
+        <div class="finding-card pass" data-status="PASS" data-severity="Medium" data-text="S3-004 S3 bucket versioning enabled arn:aws:s3:::compliance-lab-insecure-123456789012 s3 us-east-1">
+          <div class="finding-header">
+            <div>
+              <span class="pill pill-pass">PASS</span>
+              <strong style="margin-left: 0.5rem; color: #93c5fd;">S3-004</strong>: 
+              <span class="finding-title">S3 bucket versioning enabled</span>
+              <div><span class="finding-res">arn:aws:s3:::compliance-lab-insecure-123456789012</span></div>
+            </div>
+            <div style="text-align: right;">
+              <span class="sev-medium">Medium</span>
+              <div style="font-size:0.75rem; color:var(--text-muted);">Risk: 6/25 | us-east-1</div>
+            </div>
+          </div>
+
+          <div class="finding-details">
+            
+
+            <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.8rem; color:var(--text-muted);">
+              <div>ISO Controls: <strong>A.8.13</strong></div>
+              <button class="evidence-toggle" onclick="toggleEvidence('ev-12')">View Evidence JSON</button>
+            </div>
+
+            <pre id="ev-12" class="evidence-json" style="display:none;">{
+  "evidence": "Compliant configuration verified",
+  "remediated": true
+}</pre>
+          </div>
+        </div>
+        
+        <div class="finding-card fail" data-status="FAIL" data-severity="Low" data-text="S3-005 S3 server access logging enabled arn:aws:s3:::compliance-lab-insecure-123456789012 s3 us-east-1">
+          <div class="finding-header">
+            <div>
+              <span class="pill pill-fail">FAIL</span>
+              <strong style="margin-left: 0.5rem; color: #93c5fd;">S3-005</strong>: 
+              <span class="finding-title">S3 server access logging enabled</span>
+              <div><span class="finding-res">arn:aws:s3:::compliance-lab-insecure-123456789012</span></div>
+            </div>
+            <div style="text-align: right;">
+              <span class="sev-low">Low</span>
+              <div style="font-size:0.75rem; color:var(--text-muted);">Risk: 4/25 | us-east-1</div>
+            </div>
+          </div>
+
+          <div class="finding-details">
+            
+            <div class="remediation-box">
+              <strong>Remediation:</strong> Enable Server Access Logging on the bucket, directing logs to a dedicated, secured log bucket.
+            </div>
+            
+
+            <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.8rem; color:var(--text-muted);">
+              <div>ISO Controls: <strong>A.8.15</strong></div>
+              <button class="evidence-toggle" onclick="toggleEvidence('ev-13')">View Evidence JSON</button>
+            </div>
+
+            <pre id="ev-13" class="evidence-json" style="display:none;">{
+  "message": "Logging disabled"
+}</pre>
+          </div>
+        </div>
+        
+        <div class="finding-card pass" data-status="PASS" data-severity="High" data-text="S3-006 S3 bucket enforces TLS in transit (SecureTransport) arn:aws:s3:::compliance-lab-insecure-123456789012 s3 us-east-1">
+          <div class="finding-header">
+            <div>
+              <span class="pill pill-pass">PASS</span>
+              <strong style="margin-left: 0.5rem; color: #93c5fd;">S3-006</strong>: 
+              <span class="finding-title">S3 bucket enforces TLS in transit (SecureTransport)</span>
+              <div><span class="finding-res">arn:aws:s3:::compliance-lab-insecure-123456789012</span></div>
+            </div>
+            <div style="text-align: right;">
+              <span class="sev-high">High</span>
+              <div style="font-size:0.75rem; color:var(--text-muted);">Risk: 12/25 | us-east-1</div>
+            </div>
+          </div>
+
+          <div class="finding-details">
+            
+
+            <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.8rem; color:var(--text-muted);">
+              <div>ISO Controls: <strong>A.8.24, A.5.14</strong></div>
+              <button class="evidence-toggle" onclick="toggleEvidence('ev-14')">View Evidence JSON</button>
+            </div>
+
+            <pre id="ev-14" class="evidence-json" style="display:none;">{
+  "evidence": "Compliant configuration verified",
+  "remediated": true
+}</pre>
+          </div>
+        </div>
+        
+        <div class="finding-card pass" data-status="PASS" data-severity="High" data-text="NET-001 Security groups do not allow unrestricted SSH (22) or RDP (3389) arn:aws:ec2:us-east-1:123456789012:security-group/sg-01a2b3c4d ec2 us-east-1">
+          <div class="finding-header">
+            <div>
+              <span class="pill pill-pass">PASS</span>
+              <strong style="margin-left: 0.5rem; color: #93c5fd;">NET-001</strong>: 
+              <span class="finding-title">Security groups do not allow unrestricted SSH (22) or RDP (3389)</span>
+              <div><span class="finding-res">arn:aws:ec2:us-east-1:123456789012:security-group/sg-01a2b3c4d</span></div>
+            </div>
+            <div style="text-align: right;">
+              <span class="sev-high">High</span>
+              <div style="font-size:0.75rem; color:var(--text-muted);">Risk: 16/25 | us-east-1</div>
+            </div>
+          </div>
+
+          <div class="finding-details">
+            
+
+            <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.8rem; color:var(--text-muted);">
+              <div>ISO Controls: <strong>A.8.20, A.8.22</strong></div>
+              <button class="evidence-toggle" onclick="toggleEvidence('ev-15')">View Evidence JSON</button>
+            </div>
+
+            <pre id="ev-15" class="evidence-json" style="display:none;">{
+  "evidence": "Compliant configuration verified",
+  "remediated": true
+}</pre>
+          </div>
+        </div>
+        
+        <div class="finding-card pass" data-status="PASS" data-severity="Critical" data-text="NET-002 Security groups do not allow unrestricted all-port ingress arn:aws:ec2:us-east-1:123456789012:security-group/sg-01a2b3c4d ec2 us-east-1">
+          <div class="finding-header">
+            <div>
+              <span class="pill pill-pass">PASS</span>
+              <strong style="margin-left: 0.5rem; color: #93c5fd;">NET-002</strong>: 
+              <span class="finding-title">Security groups do not allow unrestricted all-port ingress</span>
+              <div><span class="finding-res">arn:aws:ec2:us-east-1:123456789012:security-group/sg-01a2b3c4d</span></div>
+            </div>
+            <div style="text-align: right;">
+              <span class="sev-critical">Critical</span>
+              <div style="font-size:0.75rem; color:var(--text-muted);">Risk: 20/25 | us-east-1</div>
+            </div>
+          </div>
+
+          <div class="finding-details">
+            
+
+            <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.8rem; color:var(--text-muted);">
+              <div>ISO Controls: <strong>A.8.20</strong></div>
+              <button class="evidence-toggle" onclick="toggleEvidence('ev-16')">View Evidence JSON</button>
+            </div>
+
+            <pre id="ev-16" class="evidence-json" style="display:none;">{
+  "evidence": "Compliant configuration verified",
+  "remediated": true
+}</pre>
+          </div>
+        </div>
+        
+        <div class="finding-card pass" data-status="PASS" data-severity="Medium" data-text="NET-003 EBS default encryption enabled for account in region arn:aws:ec2:us-east-1:123456789012:ebs-encryption ec2 us-east-1">
+          <div class="finding-header">
+            <div>
+              <span class="pill pill-pass">PASS</span>
+              <strong style="margin-left: 0.5rem; color: #93c5fd;">NET-003</strong>: 
+              <span class="finding-title">EBS default encryption enabled for account in region</span>
+              <div><span class="finding-res">arn:aws:ec2:us-east-1:123456789012:ebs-encryption</span></div>
+            </div>
+            <div style="text-align: right;">
+              <span class="sev-medium">Medium</span>
+              <div style="font-size:0.75rem; color:var(--text-muted);">Risk: 8/25 | us-east-1</div>
+            </div>
+          </div>
+
+          <div class="finding-details">
+            
+
+            <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.8rem; color:var(--text-muted);">
+              <div>ISO Controls: <strong>A.8.24</strong></div>
+              <button class="evidence-toggle" onclick="toggleEvidence('ev-17')">View Evidence JSON</button>
+            </div>
+
+            <pre id="ev-17" class="evidence-json" style="display:none;">{
+  "evidence": "Compliant configuration verified",
+  "remediated": true
+}</pre>
+          </div>
+        </div>
+        
+        <div class="finding-card pass" data-status="PASS" data-severity="Medium" data-text="NET-004 All attached and unattached EBS volumes are encrypted arn:aws:ec2:us-east-1:123456789012:volume/vol-0987654321 ec2 us-east-1">
+          <div class="finding-header">
+            <div>
+              <span class="pill pill-pass">PASS</span>
+              <strong style="margin-left: 0.5rem; color: #93c5fd;">NET-004</strong>: 
+              <span class="finding-title">All attached and unattached EBS volumes are encrypted</span>
+              <div><span class="finding-res">arn:aws:ec2:us-east-1:123456789012:volume/vol-0987654321</span></div>
+            </div>
+            <div style="text-align: right;">
+              <span class="sev-medium">Medium</span>
+              <div style="font-size:0.75rem; color:var(--text-muted);">Risk: 8/25 | us-east-1</div>
+            </div>
+          </div>
+
+          <div class="finding-details">
+            
+
+            <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.8rem; color:var(--text-muted);">
+              <div>ISO Controls: <strong>A.8.24</strong></div>
+              <button class="evidence-toggle" onclick="toggleEvidence('ev-18')">View Evidence JSON</button>
+            </div>
+
+            <pre id="ev-18" class="evidence-json" style="display:none;">{
+  "Encrypted": true
+}</pre>
+          </div>
+        </div>
+        
+        <div class="finding-card pass" data-status="PASS" data-severity="Medium" data-text="NET-005 VPC Flow Logs enabled for all VPCs arn:aws:ec2:us-east-1:123456789012:vpc/vpc-0a1b2c3d4e5f ec2 us-east-1">
+          <div class="finding-header">
+            <div>
+              <span class="pill pill-pass">PASS</span>
+              <strong style="margin-left: 0.5rem; color: #93c5fd;">NET-005</strong>: 
+              <span class="finding-title">VPC Flow Logs enabled for all VPCs</span>
+              <div><span class="finding-res">arn:aws:ec2:us-east-1:123456789012:vpc/vpc-0a1b2c3d4e5f</span></div>
+            </div>
+            <div style="text-align: right;">
+              <span class="sev-medium">Medium</span>
+              <div style="font-size:0.75rem; color:var(--text-muted);">Risk: 9/25 | us-east-1</div>
+            </div>
+          </div>
+
+          <div class="finding-details">
+            
+
+            <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.8rem; color:var(--text-muted);">
+              <div>ISO Controls: <strong>A.8.15, A.8.16</strong></div>
+              <button class="evidence-toggle" onclick="toggleEvidence('ev-19')">View Evidence JSON</button>
+            </div>
+
+            <pre id="ev-19" class="evidence-json" style="display:none;">{
+  "evidence": "Compliant configuration verified",
+  "remediated": true
+}</pre>
+          </div>
+        </div>
+        
+        <div class="finding-card pass" data-status="PASS" data-severity="High" data-text="LOG-001 CloudTrail multi-region trail enabled and logging arn:aws:cloudtrail:us-east-1:123456789012:trail/MainTrail logging us-east-1">
+          <div class="finding-header">
+            <div>
+              <span class="pill pill-pass">PASS</span>
+              <strong style="margin-left: 0.5rem; color: #93c5fd;">LOG-001</strong>: 
+              <span class="finding-title">CloudTrail multi-region trail enabled and logging</span>
+              <div><span class="finding-res">arn:aws:cloudtrail:us-east-1:123456789012:trail/MainTrail</span></div>
+            </div>
+            <div style="text-align: right;">
+              <span class="sev-high">High</span>
+              <div style="font-size:0.75rem; color:var(--text-muted);">Risk: 16/25 | us-east-1</div>
+            </div>
+          </div>
+
+          <div class="finding-details">
+            
+
+            <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.8rem; color:var(--text-muted);">
+              <div>ISO Controls: <strong>A.8.15</strong></div>
+              <button class="evidence-toggle" onclick="toggleEvidence('ev-20')">View Evidence JSON</button>
+            </div>
+
+            <pre id="ev-20" class="evidence-json" style="display:none;">{
+  "IsLogging": true,
+  "IsMultiRegionTrail": true
+}</pre>
+          </div>
+        </div>
+        
+        <div class="finding-card pass" data-status="PASS" data-severity="Medium" data-text="LOG-002 CloudTrail log file validation enabled arn:aws:cloudtrail:us-east-1:123456789012:trail/MainTrail logging us-east-1">
+          <div class="finding-header">
+            <div>
+              <span class="pill pill-pass">PASS</span>
+              <strong style="margin-left: 0.5rem; color: #93c5fd;">LOG-002</strong>: 
+              <span class="finding-title">CloudTrail log file validation enabled</span>
+              <div><span class="finding-res">arn:aws:cloudtrail:us-east-1:123456789012:trail/MainTrail</span></div>
+            </div>
+            <div style="text-align: right;">
+              <span class="sev-medium">Medium</span>
+              <div style="font-size:0.75rem; color:var(--text-muted);">Risk: 8/25 | us-east-1</div>
+            </div>
+          </div>
+
+          <div class="finding-details">
+            
+
+            <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.8rem; color:var(--text-muted);">
+              <div>ISO Controls: <strong>A.8.15, A.5.33</strong></div>
+              <button class="evidence-toggle" onclick="toggleEvidence('ev-21')">View Evidence JSON</button>
+            </div>
+
+            <pre id="ev-21" class="evidence-json" style="display:none;">{
+  "LogFileValidationEnabled": true
+}</pre>
+          </div>
+        </div>
+        
+        <div class="finding-card pass" data-status="PASS" data-severity="Medium" data-text="LOG-003 AWS Config configuration recorder enabled arn:aws:config:us-east-1:123456789012:recorder logging us-east-1">
+          <div class="finding-header">
+            <div>
+              <span class="pill pill-pass">PASS</span>
+              <strong style="margin-left: 0.5rem; color: #93c5fd;">LOG-003</strong>: 
+              <span class="finding-title">AWS Config configuration recorder enabled</span>
+              <div><span class="finding-res">arn:aws:config:us-east-1:123456789012:recorder</span></div>
+            </div>
+            <div style="text-align: right;">
+              <span class="sev-medium">Medium</span>
+              <div style="font-size:0.75rem; color:var(--text-muted);">Risk: 9/25 | us-east-1</div>
+            </div>
+          </div>
+
+          <div class="finding-details">
+            
+
+            <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.8rem; color:var(--text-muted);">
+              <div>ISO Controls: <strong>A.8.9</strong></div>
+              <button class="evidence-toggle" onclick="toggleEvidence('ev-22')">View Evidence JSON</button>
+            </div>
+
+            <pre id="ev-22" class="evidence-json" style="display:none;">{
+  "evidence": "Compliant configuration verified",
+  "remediated": true
+}</pre>
+          </div>
+        </div>
+        
+        <div class="finding-card pass" data-status="PASS" data-severity="High" data-text="LOG-004 Amazon GuardDuty detector enabled arn:aws:guardduty:us-east-1:123456789012:detector/det-123 logging us-east-1">
+          <div class="finding-header">
+            <div>
+              <span class="pill pill-pass">PASS</span>
+              <strong style="margin-left: 0.5rem; color: #93c5fd;">LOG-004</strong>: 
+              <span class="finding-title">Amazon GuardDuty detector enabled</span>
+              <div><span class="finding-res">arn:aws:guardduty:us-east-1:123456789012:detector/det-123</span></div>
+            </div>
+            <div style="text-align: right;">
+              <span class="sev-high">High</span>
+              <div style="font-size:0.75rem; color:var(--text-muted);">Risk: 12/25 | us-east-1</div>
+            </div>
+          </div>
+
+          <div class="finding-details">
+            
+
+            <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.8rem; color:var(--text-muted);">
+              <div>ISO Controls: <strong>A.8.16</strong></div>
+              <button class="evidence-toggle" onclick="toggleEvidence('ev-23')">View Evidence JSON</button>
+            </div>
+
+            <pre id="ev-23" class="evidence-json" style="display:none;">{
+  "Status": "ENABLED"
+}</pre>
+          </div>
+        </div>
+        
+        <div class="finding-card pass" data-status="PASS" data-severity="Medium" data-text="KMS-001 Customer managed KMS keys have annual rotation enabled kms:customer-keys kms us-east-1">
+          <div class="finding-header">
+            <div>
+              <span class="pill pill-pass">PASS</span>
+              <strong style="margin-left: 0.5rem; color: #93c5fd;">KMS-001</strong>: 
+              <span class="finding-title">Customer managed KMS keys have annual rotation enabled</span>
+              <div><span class="finding-res">kms:customer-keys</span></div>
+            </div>
+            <div style="text-align: right;">
+              <span class="sev-medium">Medium</span>
+              <div style="font-size:0.75rem; color:var(--text-muted);">Risk: 6/25 | us-east-1</div>
+            </div>
+          </div>
+
+          <div class="finding-details">
+            
+
+            <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.8rem; color:var(--text-muted);">
+              <div>ISO Controls: <strong>A.8.24</strong></div>
+              <button class="evidence-toggle" onclick="toggleEvidence('ev-24')">View Evidence JSON</button>
+            </div>
+
+            <pre id="ev-24" class="evidence-json" style="display:none;">{
+  "message": "All keys have rotation enabled"
+}</pre>
+          </div>
+        </div>
+        
+        <div class="finding-card pass" data-status="PASS" data-severity="Medium" data-text="RDS-001 RDS database instances have storage encryption enabled rds:instances rds us-east-1">
+          <div class="finding-header">
+            <div>
+              <span class="pill pill-pass">PASS</span>
+              <strong style="margin-left: 0.5rem; color: #93c5fd;">RDS-001</strong>: 
+              <span class="finding-title">RDS database instances have storage encryption enabled</span>
+              <div><span class="finding-res">rds:instances</span></div>
+            </div>
+            <div style="text-align: right;">
+              <span class="sev-medium">Medium</span>
+              <div style="font-size:0.75rem; color:var(--text-muted);">Risk: 8/25 | us-east-1</div>
+            </div>
+          </div>
+
+          <div class="finding-details">
+            
+
+            <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.8rem; color:var(--text-muted);">
+              <div>ISO Controls: <strong>A.8.24</strong></div>
+              <button class="evidence-toggle" onclick="toggleEvidence('ev-25')">View Evidence JSON</button>
+            </div>
+
+            <pre id="ev-25" class="evidence-json" style="display:none;">{
+  "message": "All storage encrypted"
+}</pre>
+          </div>
+        </div>
+        
+        <div class="finding-card pass" data-status="PASS" data-severity="High" data-text="RDS-002 RDS instances are not publicly accessible rds:instances rds us-east-1">
+          <div class="finding-header">
+            <div>
+              <span class="pill pill-pass">PASS</span>
+              <strong style="margin-left: 0.5rem; color: #93c5fd;">RDS-002</strong>: 
+              <span class="finding-title">RDS instances are not publicly accessible</span>
+              <div><span class="finding-res">rds:instances</span></div>
+            </div>
+            <div style="text-align: right;">
+              <span class="sev-high">High</span>
+              <div style="font-size:0.75rem; color:var(--text-muted);">Risk: 16/25 | us-east-1</div>
+            </div>
+          </div>
+
+          <div class="finding-details">
+            
+
+            <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.8rem; color:var(--text-muted);">
+              <div>ISO Controls: <strong>A.8.20, A.8.3</strong></div>
+              <button class="evidence-toggle" onclick="toggleEvidence('ev-26')">View Evidence JSON</button>
+            </div>
+
+            <pre id="ev-26" class="evidence-json" style="display:none;">{
+  "message": "No public databases"
+}</pre>
+          </div>
+        </div>
+        
+        <div class="finding-card pass" data-status="PASS" data-severity="Medium" data-text="RDS-003 RDS automated backup retention period is at least 7 days rds:instances rds us-east-1">
+          <div class="finding-header">
+            <div>
+              <span class="pill pill-pass">PASS</span>
+              <strong style="margin-left: 0.5rem; color: #93c5fd;">RDS-003</strong>: 
+              <span class="finding-title">RDS automated backup retention period is at least 7 days</span>
+              <div><span class="finding-res">rds:instances</span></div>
+            </div>
+            <div style="text-align: right;">
+              <span class="sev-medium">Medium</span>
+              <div style="font-size:0.75rem; color:var(--text-muted);">Risk: 8/25 | us-east-1</div>
+            </div>
+          </div>
+
+          <div class="finding-details">
+            
+
+            <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.8rem; color:var(--text-muted);">
+              <div>ISO Controls: <strong>A.8.13, A.5.30</strong></div>
+              <button class="evidence-toggle" onclick="toggleEvidence('ev-27')">View Evidence JSON</button>
+            </div>
+
+            <pre id="ev-27" class="evidence-json" style="display:none;">{
+  "message": "Retention \u003e= 7 days"
+}</pre>
+          </div>
+        </div>
+        
+        <div class="finding-card pass" data-status="PASS" data-severity="Medium" data-text="RDS-004 RDS production instances configured with Multi-AZ deployment rds:instances rds us-east-1">
+          <div class="finding-header">
+            <div>
+              <span class="pill pill-pass">PASS</span>
+              <strong style="margin-left: 0.5rem; color: #93c5fd;">RDS-004</strong>: 
+              <span class="finding-title">RDS production instances configured with Multi-AZ deployment</span>
+              <div><span class="finding-res">rds:instances</span></div>
+            </div>
+            <div style="text-align: right;">
+              <span class="sev-medium">Medium</span>
+              <div style="font-size:0.75rem; color:var(--text-muted);">Risk: 6/25 | us-east-1</div>
+            </div>
+          </div>
+
+          <div class="finding-details">
+            
+
+            <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.8rem; color:var(--text-muted);">
+              <div>ISO Controls: <strong>A.8.14, A.5.30</strong></div>
+              <button class="evidence-toggle" onclick="toggleEvidence('ev-28')">View Evidence JSON</button>
+            </div>
+
+            <pre id="ev-28" class="evidence-json" style="display:none;">{
+  "message": "Multi-AZ configured"
+}</pre>
+          </div>
+        </div>
+        
+      </div>
+    </section>
+
+    <!-- Methodology & Limitations -->
+    <footer style="margin-top:2rem;">
+      <h3 style="color:#e5e7eb; font-size:1rem; margin-bottom:0.5rem;">Audit Methodology & Disclaimers</h3>
+      <p style="margin-bottom:0.75rem; line-height:1.6;">
+        <strong>Point-in-Time Assessment:</strong> This scan evaluates active AWS configuration states at the moment of execution. It does not inspect operating system kernels, application runtimes, or unmanaged on-premise infrastructure.
+      </p>
+      <p style="margin-bottom:0.75rem; line-height:1.6;">
+        <strong>ISO 27001:2022 Indicative Mapping:</strong> Control mappings to ISO 27001:2022 Annex A represent best-practice technical alignments designed to assist risk assessments and internal audits. This report does not constitute an accredited certification audit or formal ISO compliance certificate.
+      </p>
+      <div>
+        <span>Report Cryptographic SHA-256 Digest:</span><br>
+        <span class="footer-sha">588b6d9d46bf07c75195d6d179d8b27653412a84b147de0b9c60f0f0b5593bde</span>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    let currentFilter = 'ALL';
+
+    function setFilter(status, btn) {
+      currentFilter = status;
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      filterFindings();
+    }
+
+    function filterFindings() {
+      const search = document.getElementById('searchInput').value.toLowerCase();
+      const cards = document.querySelectorAll('.finding-card');
+
+      cards.forEach(card => {
+        const cardStatus = card.getAttribute('data-status');
+        const cardText = card.getAttribute('data-text').toLowerCase();
+
+        const matchesFilter = (currentFilter === 'ALL' || cardStatus === currentFilter);
+        const matchesSearch = (!search || cardText.includes(search));
+
+        if (matchesFilter && matchesSearch) {
+          card.style.display = 'block';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+
+    function toggleEvidence(id) {
+      const el = document.getElementById(id);
+      if (el.style.display === 'none') {
+        el.style.display = 'block';
+      } else {
+        el.style.display = 'none';
+      }
+    }
+  </script>
+</body>
+</html>

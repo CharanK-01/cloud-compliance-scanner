@@ -1,0 +1,326 @@
+# ISO 27001:2022 Annex A Control Mappings and Risk Scoring
+# Likelihood (1-5) x Impact (1-5) => Risk Score (1-25)
+# 20-25: Critical | 12-19: High | 6-11: Medium | 1-5: Low
+
+IAM-001:
+  title: Root account has MFA enabled
+  service: iam
+  iso_controls: ["A.8.5", "A.8.2"]
+  likelihood: 4
+  impact: 5
+  remediation: >
+    Sign in to the AWS Management Console as the root user, navigate to IAM > Security credentials,
+    and assign a virtual or hardware MFA device to the root account immediately.
+  rationale: >
+    The root account has unrestricted administrative power across the entire AWS account.
+    Without MFA, credentials compromise results in complete account takeover.
+
+IAM-002:
+  title: No root account active access keys
+  service: iam
+  iso_controls: ["A.8.2", "A.5.15"]
+  likelihood: 4
+  impact: 4
+  remediation: >
+    Sign in as the root user, open IAM > Security credentials, and delete any active access keys.
+    Use IAM Identity Center or dedicated IAM roles for programmatic access instead.
+  rationale: >
+    Root access keys cannot be constrained by permission boundaries or SCPs, presenting an
+    extreme risk if leaked or committed to version control.
+
+IAM-003:
+  title: All console users have MFA enabled
+  service: iam
+  iso_controls: ["A.8.5"]
+  likelihood: 3
+  impact: 4
+  remediation: >
+    Enforce multi-factor authentication for all IAM users with console access passwords.
+    Apply an IAM policy requiring MFA for API and console actions.
+  rationale: >
+    Passwords alone are vulnerable to credential stuffing, phishing, and spray attacks.
+    MFA adds essential second-factor defense.
+
+IAM-004:
+  title: Strong account password policy enforced
+  service: iam
+  iso_controls: ["A.5.17"]
+  likelihood: 3
+  impact: 3
+  remediation: >
+    Navigate to IAM > Account settings and enforce: minimum length of 14+ characters,
+    require uppercase, lowercase, numbers, and symbols, prevent password reuse (24), and expire in 90 days.
+  rationale: >
+    Weak passwords facilitate brute-force attacks and lateral movement within the cloud environment.
+
+IAM-005:
+  title: IAM access keys rotated within 90 days
+  service: iam
+  iso_controls: ["A.5.17", "A.5.18"]
+  likelihood: 3
+  impact: 3
+  remediation: >
+    Create a new key pair for users with keys older than 90 days, update client applications,
+    deactivate the old key, verify functionality, and delete the legacy key.
+  rationale: >
+    Regular rotation reduces the window of vulnerability if credentials are unintentionally exposed.
+
+IAM-006:
+  title: No unused IAM credentials over 90 days
+  service: iam
+  iso_controls: ["A.5.18"]
+  likelihood: 3
+  impact: 3
+  remediation: >
+    Review dormant IAM users and credentials unused for 90+ days. Deactivate or delete stale
+    access keys and remove console access passwords.
+  rationale: >
+    Dormant credentials increase the attack surface and represent unmonitored persistence pathways.
+
+IAM-007:
+  title: No wildcard admin policies attached
+  service: iam
+  iso_controls: ["A.8.2", "A.5.15"]
+  likelihood: 4
+  impact: 4
+  remediation: >
+    Replace policies with Action: '*' and Resource: '*' with least-privilege scoped permissions
+    tailored to specific service and resource requirements.
+  rationale: >
+    Overly permissive admin rights violate the principle of least privilege and amplify blast radius.
+
+IAM-008:
+  title: Policies attached to groups or roles rather than individual users
+  service: iam
+  iso_controls: ["A.5.15", "A.5.18"]
+  likelihood: 2
+  impact: 3
+  remediation: >
+    Detach inline and managed policies from individual users. Create functional IAM groups or roles
+    and attach policies at the group/role level.
+  rationale: >
+    Direct user attachments lead to permission sprawl, inconsistency, and difficult compliance auditing.
+
+S3-001:
+  title: S3 Block Public Access enabled at bucket and account level
+  service: s3
+  iso_controls: ["A.8.3", "A.5.15"]
+  likelihood: 3
+  impact: 5
+  remediation: >
+    Enable all 4 Block Public Access settings (BlockPublicAcls, IgnorePublicAcls,
+    BlockPublicPolicy, RestrictPublicBuckets) at both account and bucket level.
+  rationale: >
+    Public exposure of S3 storage is one of the leading root causes of enterprise data breaches.
+
+S3-002:
+  title: No public S3 ACLs or public bucket policies
+  service: s3
+  iso_controls: ["A.8.3"]
+  likelihood: 4
+  impact: 5
+  remediation: >
+    Remove all ACL grants to 'AuthenticatedUsers' and 'AllUsers'. Revoke public Principal: '*'
+    clauses from bucket policies unless intentionally hosting public static assets.
+  rationale: >
+    Public bucket access allows unauthenticated external actors to read, exfiltrate, or tamper with data.
+
+S3-003:
+  title: S3 default encryption enabled (SSE-KMS or SSE-S3)
+  service: s3
+  iso_controls: ["A.8.24"]
+  likelihood: 2
+  impact: 3
+  remediation: >
+    Enable default encryption on the S3 bucket using AWS KMS (SSE-KMS) or Amazon S3 managed keys (SSE-S3).
+  rationale: >
+    Encryption at rest ensures confidentiality and satisfies regulatory compliance standards.
+
+S3-004:
+  title: S3 bucket versioning enabled
+  service: s3
+  iso_controls: ["A.8.13"]
+  likelihood: 2
+  impact: 3
+  remediation: >
+    Enable versioning on the S3 bucket via S3 Console > Bucket Properties > Bucket Versioning.
+  rationale: >
+    Versioning protects against accidental deletion, ransomware, and unauthorized data modification.
+
+S3-005:
+  title: S3 server access logging enabled
+  service: s3
+  iso_controls: ["A.8.15"]
+  likelihood: 2
+  impact: 2
+  remediation: >
+    Enable Server Access Logging on the bucket, directing logs to a dedicated, secured log bucket.
+  rationale: >
+    Access logs provide audit trails required for incident investigation and forensic compliance.
+
+S3-006:
+  title: S3 bucket enforces TLS in transit (SecureTransport)
+  service: s3
+  iso_controls: ["A.8.24", "A.5.14"]
+  likelihood: 3
+  impact: 4
+  remediation: >
+    Add a bucket policy denying s3:* actions when 'aws:SecureTransport' condition is false.
+  rationale: >
+    Enforcing TLS protects data confidentiality and prevents eavesdropping or man-in-the-middle attacks.
+
+NET-001:
+  title: Security groups do not allow unrestricted SSH (22) or RDP (3389)
+  service: ec2
+  iso_controls: ["A.8.20", "A.8.22"]
+  likelihood: 4
+  impact: 4
+  remediation: >
+    Modify security group rules to restrict ports 22 and 3389 to specific trusted corporate IP CIDRs
+    or migrate management access to AWS Systems Manager Session Manager.
+  rationale: >
+    Unrestricted administrative ports on the internet are constant targets for automated brute force and exploit attempts.
+
+NET-002:
+  title: Security groups do not allow unrestricted all-port ingress
+  service: ec2
+  iso_controls: ["A.8.20"]
+  likelihood: 4
+  impact: 5
+  remediation: >
+    Remove security group ingress rules allowing all traffic (-1 protocol or port 0-65535) from 0.0.0.0/0 or ::/0.
+  rationale: >
+    Opening all ports to the internet exposes internal services, databases, and debugging ports indiscriminately.
+
+NET-003:
+  title: EBS default encryption enabled for account in region
+  service: ec2
+  iso_controls: ["A.8.24"]
+  likelihood: 2
+  impact: 4
+  remediation: >
+    Enable EBS default encryption in the EC2 Console > EC2 Dashboard > Settings > EBS encryption.
+  rationale: >
+    EBS default encryption ensures all newly provisioned EBS volumes and snapshots are encrypted at rest.
+
+NET-004:
+  title: All attached and unattached EBS volumes are encrypted
+  service: ec2
+  iso_controls: ["A.8.24"]
+  likelihood: 2
+  impact: 4
+  remediation: >
+    Create snapshots of unencrypted EBS volumes, copy the snapshots with encryption enabled,
+    and create new encrypted volumes to replace unencrypted volumes.
+  rationale: >
+    Unencrypted volumes risk data exposure if underlying storage hardware is compromised or misplaced.
+
+NET-005:
+  title: VPC Flow Logs enabled for all VPCs
+  service: ec2
+  iso_controls: ["A.8.15", "A.8.16"]
+  likelihood: 3
+  impact: 3
+  remediation: >
+    Create Flow Logs for all VPCs sending accepted and rejected IP traffic telemetry to CloudWatch Logs or S3.
+  rationale: >
+    Flow logs provide visibility into network anomalies, communication patterns, and potential breach activity.
+
+LOG-001:
+  title: CloudTrail multi-region trail enabled and logging
+  service: logging
+  iso_controls: ["A.8.15"]
+  likelihood: 4
+  impact: 4
+  remediation: >
+    Configure at least one multi-region CloudTrail trail logging management events with logging status active.
+  rationale: >
+    Without comprehensive CloudTrail logging, administrative actions and potential attacks cannot be audited.
+
+LOG-002:
+  title: CloudTrail log file validation enabled
+  service: logging
+  iso_controls: ["A.8.15", "A.5.33"]
+  likelihood: 2
+  impact: 4
+  remediation: >
+    Enable log file validation on all trails to cryptographically verify log file integrity.
+  rationale: >
+    Log validation uses digest files and digital signatures to ensure audit trails have not been modified or deleted.
+
+LOG-003:
+  title: AWS Config configuration recorder enabled
+  service: logging
+  iso_controls: ["A.8.9"]
+  likelihood: 3
+  impact: 3
+  remediation: >
+    Enable AWS Config recorder and delivery channel in each active region to record resource configurations.
+  rationale: >
+    AWS Config tracks historical resource configurations and configuration drift for compliance validation.
+
+LOG-004:
+  title: Amazon GuardDuty detector enabled
+  service: logging
+  iso_controls: ["A.8.16"]
+  likelihood: 3
+  impact: 4
+  remediation: >
+    Enable GuardDuty across all active regions to leverage machine learning threat detection on CloudTrail, VPC, and DNS logs.
+  rationale: >
+    GuardDuty provides continuous intelligent threat detection to identify compromised credentials and anomalous behaviors.
+
+KMS-001:
+  title: Customer managed KMS keys have annual rotation enabled
+  service: kms
+  iso_controls: ["A.8.24"]
+  likelihood: 2
+  impact: 3
+  remediation: >
+    Enable automatic key rotation for all active customer-managed symmetric KMS keys in KMS Console or via CLI.
+  rationale: >
+    Annual cryptographic key rotation limits the volume of ciphertext encrypted under a single key version.
+
+RDS-001:
+  title: RDS database instances have storage encryption enabled
+  service: rds
+  iso_controls: ["A.8.24"]
+  likelihood: 2
+  impact: 4
+  remediation: >
+    Enable KMS encryption for all RDS databases. Note that unencrypted instances must be migrated via snapshot copy.
+  rationale: >
+    Database storage encryption ensures data, automated backups, and read replicas are protected at rest.
+
+RDS-002:
+  title: RDS instances are not publicly accessible
+  service: rds
+  iso_controls: ["A.8.20", "A.8.3"]
+  likelihood: 4
+  impact: 4
+  remediation: >
+    Modify RDS instances to set 'PubliclyAccessible' to false and place databases inside private VPC subnets.
+  rationale: >
+    Databases exposed directly to the public internet invite continuous brute-force attacks and injection attempts.
+
+RDS-003:
+  title: RDS automated backup retention period is at least 7 days
+  service: rds
+  iso_controls: ["A.8.13", "A.5.30"]
+  likelihood: 2
+  impact: 4
+  remediation: >
+    Modify RDS instance backup configuration to set backup retention period between 7 and 35 days.
+  rationale: >
+    Inadequate backup retention hampers disaster recovery and business continuity objectives.
+
+RDS-004:
+  title: RDS production instances configured with Multi-AZ deployment
+  service: rds
+  iso_controls: ["A.8.14", "A.5.30"]
+  likelihood: 2
+  impact: 3
+  remediation: >
+    Enable Multi-AZ deployment for production RDS databases to maintain synchronous standby replicas across availability zones.
+  rationale: >
+    Single-AZ deployments fail to meet high availability and business continuity requirements during infrastructure failures.

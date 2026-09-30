@@ -1,0 +1,876 @@
+{
+  "metadata": {
+    "account_id": "123456789012",
+    "scan_timestamp": "2026-09-30T17:24:04.547872+00:00",
+    "duration_seconds": 4.82,
+    "regions": [
+      "us-east-1"
+    ],
+    "scanner_version": "1.0.0"
+  },
+  "metrics": {
+    "overall_posture_score": 28.39,
+    "coverage_rate": 100.0,
+    "total_findings": 28,
+    "passed_count": 9,
+    "failed_count": 19,
+    "error_count": 0,
+    "na_count": 0,
+    "severity_counts": {
+      "Critical": 3,
+      "High": 6,
+      "Medium": 9,
+      "Low": 1
+    }
+  },
+  "control_summaries": [
+    {
+      "control_id": "A.5.14",
+      "title": "Information transfer",
+      "mapped_checks": [
+        "S3-006"
+      ],
+      "total_evaluated": 1,
+      "passed": 0,
+      "failed": 1,
+      "errors": 0,
+      "compliance_rate": 0.0
+    },
+    {
+      "control_id": "A.5.15",
+      "title": "Access control",
+      "mapped_checks": [
+        "IAM-002",
+        "IAM-007",
+        "IAM-008",
+        "S3-001"
+      ],
+      "total_evaluated": 4,
+      "passed": 0,
+      "failed": 4,
+      "errors": 0,
+      "compliance_rate": 0.0
+    },
+    {
+      "control_id": "A.5.17",
+      "title": "Authentication information",
+      "mapped_checks": [
+        "IAM-004",
+        "IAM-005"
+      ],
+      "total_evaluated": 2,
+      "passed": 0,
+      "failed": 2,
+      "errors": 0,
+      "compliance_rate": 0.0
+    },
+    {
+      "control_id": "A.5.18",
+      "title": "Access rights",
+      "mapped_checks": [
+        "IAM-005",
+        "IAM-006",
+        "IAM-008"
+      ],
+      "total_evaluated": 3,
+      "passed": 0,
+      "failed": 3,
+      "errors": 0,
+      "compliance_rate": 0.0
+    },
+    {
+      "control_id": "A.5.30",
+      "title": "ICT readiness for business continuity",
+      "mapped_checks": [
+        "RDS-003",
+        "RDS-004"
+      ],
+      "total_evaluated": 2,
+      "passed": 2,
+      "failed": 0,
+      "errors": 0,
+      "compliance_rate": 100.0
+    },
+    {
+      "control_id": "A.5.33",
+      "title": "Protection of records",
+      "mapped_checks": [
+        "LOG-002"
+      ],
+      "total_evaluated": 1,
+      "passed": 1,
+      "failed": 0,
+      "errors": 0,
+      "compliance_rate": 100.0
+    },
+    {
+      "control_id": "A.8.13",
+      "title": "Information backup",
+      "mapped_checks": [
+        "RDS-003",
+        "S3-004"
+      ],
+      "total_evaluated": 2,
+      "passed": 1,
+      "failed": 1,
+      "errors": 0,
+      "compliance_rate": 50.0
+    },
+    {
+      "control_id": "A.8.14",
+      "title": "Redundancy of information processing facilities",
+      "mapped_checks": [
+        "RDS-004"
+      ],
+      "total_evaluated": 1,
+      "passed": 1,
+      "failed": 0,
+      "errors": 0,
+      "compliance_rate": 100.0
+    },
+    {
+      "control_id": "A.8.15",
+      "title": "Logging",
+      "mapped_checks": [
+        "LOG-001",
+        "LOG-002",
+        "NET-005",
+        "S3-005"
+      ],
+      "total_evaluated": 4,
+      "passed": 2,
+      "failed": 2,
+      "errors": 0,
+      "compliance_rate": 50.0
+    },
+    {
+      "control_id": "A.8.16",
+      "title": "Monitoring activities",
+      "mapped_checks": [
+        "LOG-004",
+        "NET-005"
+      ],
+      "total_evaluated": 2,
+      "passed": 1,
+      "failed": 1,
+      "errors": 0,
+      "compliance_rate": 50.0
+    },
+    {
+      "control_id": "A.8.2",
+      "title": "Privileged access rights",
+      "mapped_checks": [
+        "IAM-001",
+        "IAM-002",
+        "IAM-007"
+      ],
+      "total_evaluated": 3,
+      "passed": 0,
+      "failed": 3,
+      "errors": 0,
+      "compliance_rate": 0.0
+    },
+    {
+      "control_id": "A.8.20",
+      "title": "Network controls",
+      "mapped_checks": [
+        "NET-001",
+        "NET-002",
+        "RDS-002"
+      ],
+      "total_evaluated": 3,
+      "passed": 1,
+      "failed": 2,
+      "errors": 0,
+      "compliance_rate": 33.33
+    },
+    {
+      "control_id": "A.8.22",
+      "title": "Segregation of networks",
+      "mapped_checks": [
+        "NET-001"
+      ],
+      "total_evaluated": 1,
+      "passed": 0,
+      "failed": 1,
+      "errors": 0,
+      "compliance_rate": 0.0
+    },
+    {
+      "control_id": "A.8.24",
+      "title": "Use of cryptography",
+      "mapped_checks": [
+        "KMS-001",
+        "NET-003",
+        "NET-004",
+        "RDS-001",
+        "S3-003",
+        "S3-006"
+      ],
+      "total_evaluated": 6,
+      "passed": 3,
+      "failed": 3,
+      "errors": 0,
+      "compliance_rate": 50.0
+    },
+    {
+      "control_id": "A.8.3",
+      "title": "Information access restriction",
+      "mapped_checks": [
+        "RDS-002",
+        "S3-001",
+        "S3-002"
+      ],
+      "total_evaluated": 3,
+      "passed": 1,
+      "failed": 2,
+      "errors": 0,
+      "compliance_rate": 33.33
+    },
+    {
+      "control_id": "A.8.5",
+      "title": "Secure authentication",
+      "mapped_checks": [
+        "IAM-001",
+        "IAM-003"
+      ],
+      "total_evaluated": 2,
+      "passed": 0,
+      "failed": 2,
+      "errors": 0,
+      "compliance_rate": 0.0
+    },
+    {
+      "control_id": "A.8.9",
+      "title": "Configuration management",
+      "mapped_checks": [
+        "LOG-003"
+      ],
+      "total_evaluated": 1,
+      "passed": 0,
+      "failed": 1,
+      "errors": 0,
+      "compliance_rate": 0.0
+    }
+  ],
+  "top_risks": [
+    {
+      "check_id": "IAM-001",
+      "title": "Root account has MFA enabled",
+      "service": "iam",
+      "region": "us-east-1",
+      "resource_id": "arn:aws:iam::123456789012:root",
+      "status": "FAIL",
+      "severity": "Critical",
+      "risk_score": 20,
+      "iso_controls": [
+        "A.8.5",
+        "A.8.2"
+      ],
+      "evidence": {
+        "AccountMFAEnabled": 0
+      },
+      "remediation": "Sign in to the AWS Management Console as the root user, navigate to IAM > Security credentials, and assign a virtual or hardware MFA device to the root account immediately.",
+      "rationale": "The root account has unrestricted administrative power across the entire AWS account. Without MFA, credentials compromise results in complete account takeover."
+    },
+    {
+      "check_id": "S3-002",
+      "title": "No public S3 ACLs or public bucket policies",
+      "service": "s3",
+      "region": "us-east-1",
+      "resource_id": "arn:aws:s3:::compliance-lab-insecure-123456789012",
+      "status": "FAIL",
+      "severity": "Critical",
+      "risk_score": 20,
+      "iso_controls": [
+        "A.8.3"
+      ],
+      "evidence": {
+        "is_public_policy": true
+      },
+      "remediation": "Remove all ACL grants to 'AuthenticatedUsers' and 'AllUsers'. Revoke public Principal: '*' clauses from bucket policies unless intentionally hosting public static assets.",
+      "rationale": "Public bucket access allows unauthenticated external actors to read, exfiltrate, or tamper with data."
+    },
+    {
+      "check_id": "NET-002",
+      "title": "Security groups do not allow unrestricted all-port ingress",
+      "service": "ec2",
+      "region": "us-east-1",
+      "resource_id": "arn:aws:ec2:us-east-1:123456789012:security-group/sg-01a2b3c4d",
+      "status": "FAIL",
+      "severity": "Critical",
+      "risk_score": 20,
+      "iso_controls": [
+        "A.8.20"
+      ],
+      "evidence": {
+        "all_ports_open": true
+      },
+      "remediation": "Remove security group ingress rules allowing all traffic (-1 protocol or port 0-65535) from 0.0.0.0/0 or ::/0.",
+      "rationale": "Opening all ports to the internet exposes internal services, databases, and debugging ports indiscriminately."
+    },
+    {
+      "check_id": "IAM-002",
+      "title": "No root account active access keys",
+      "service": "iam",
+      "region": "us-east-1",
+      "resource_id": "arn:aws:iam::123456789012:root",
+      "status": "FAIL",
+      "severity": "High",
+      "risk_score": 16,
+      "iso_controls": [
+        "A.8.2",
+        "A.5.15"
+      ],
+      "evidence": {
+        "AccountAccessKeysPresent": 1
+      },
+      "remediation": "Sign in as the root user, open IAM > Security credentials, and delete any active access keys. Use IAM Identity Center or dedicated IAM roles for programmatic access instead.",
+      "rationale": "Root access keys cannot be constrained by permission boundaries or SCPs, presenting an extreme risk if leaked or committed to version control."
+    },
+    {
+      "check_id": "IAM-007",
+      "title": "No wildcard admin policies attached",
+      "service": "iam",
+      "region": "us-east-1",
+      "resource_id": "arn:aws:iam::123456789012:policy/WildcardAdmin",
+      "status": "FAIL",
+      "severity": "High",
+      "risk_score": 16,
+      "iso_controls": [
+        "A.8.2",
+        "A.5.15"
+      ],
+      "evidence": {
+        "Action": "*",
+        "Resource": "*"
+      },
+      "remediation": "Replace policies with Action: '*' and Resource: '*' with least-privilege scoped permissions tailored to specific service and resource requirements.",
+      "rationale": "Overly permissive admin rights violate the principle of least privilege and amplify blast radius."
+    }
+  ],
+  "findings": [
+    {
+      "check_id": "IAM-001",
+      "title": "Root account has MFA enabled",
+      "service": "iam",
+      "region": "us-east-1",
+      "resource_id": "arn:aws:iam::123456789012:root",
+      "status": "FAIL",
+      "severity": "Critical",
+      "risk_score": 20,
+      "iso_controls": [
+        "A.8.5",
+        "A.8.2"
+      ],
+      "evidence": {
+        "AccountMFAEnabled": 0
+      },
+      "remediation": "Sign in to the AWS Management Console as the root user, navigate to IAM > Security credentials, and assign a virtual or hardware MFA device to the root account immediately.",
+      "rationale": "The root account has unrestricted administrative power across the entire AWS account. Without MFA, credentials compromise results in complete account takeover."
+    },
+    {
+      "check_id": "IAM-002",
+      "title": "No root account active access keys",
+      "service": "iam",
+      "region": "us-east-1",
+      "resource_id": "arn:aws:iam::123456789012:root",
+      "status": "FAIL",
+      "severity": "High",
+      "risk_score": 16,
+      "iso_controls": [
+        "A.8.2",
+        "A.5.15"
+      ],
+      "evidence": {
+        "AccountAccessKeysPresent": 1
+      },
+      "remediation": "Sign in as the root user, open IAM > Security credentials, and delete any active access keys. Use IAM Identity Center or dedicated IAM roles for programmatic access instead.",
+      "rationale": "Root access keys cannot be constrained by permission boundaries or SCPs, presenting an extreme risk if leaked or committed to version control."
+    },
+    {
+      "check_id": "IAM-003",
+      "title": "All console users have MFA enabled",
+      "service": "iam",
+      "region": "us-east-1",
+      "resource_id": "arn:aws:iam::123456789012:user/admin-bob",
+      "status": "FAIL",
+      "severity": "High",
+      "risk_score": 12,
+      "iso_controls": [
+        "A.8.5"
+      ],
+      "evidence": {
+        "mfa_active": false
+      },
+      "remediation": "Enforce multi-factor authentication for all IAM users with console access passwords. Apply an IAM policy requiring MFA for API and console actions.",
+      "rationale": "Passwords alone are vulnerable to credential stuffing, phishing, and spray attacks. MFA adds essential second-factor defense."
+    },
+    {
+      "check_id": "IAM-004",
+      "title": "Strong account password policy enforced",
+      "service": "iam",
+      "region": "us-east-1",
+      "resource_id": "arn:aws:iam::123456789012:password-policy",
+      "status": "FAIL",
+      "severity": "Medium",
+      "risk_score": 9,
+      "iso_controls": [
+        "A.5.17"
+      ],
+      "evidence": {
+        "MinimumPasswordLength": 6
+      },
+      "remediation": "Navigate to IAM > Account settings and enforce: minimum length of 14+ characters, require uppercase, lowercase, numbers, and symbols, prevent password reuse (24), and expire in 90 days.",
+      "rationale": "Weak passwords facilitate brute-force attacks and lateral movement within the cloud environment."
+    },
+    {
+      "check_id": "IAM-005",
+      "title": "IAM access keys rotated within 90 days",
+      "service": "iam",
+      "region": "us-east-1",
+      "resource_id": "arn:aws:iam::123456789012:user/dev:key-1",
+      "status": "FAIL",
+      "severity": "Medium",
+      "risk_score": 9,
+      "iso_controls": [
+        "A.5.17",
+        "A.5.18"
+      ],
+      "evidence": {
+        "age_days": 182
+      },
+      "remediation": "Create a new key pair for users with keys older than 90 days, update client applications, deactivate the old key, verify functionality, and delete the legacy key.",
+      "rationale": "Regular rotation reduces the window of vulnerability if credentials are unintentionally exposed."
+    },
+    {
+      "check_id": "IAM-006",
+      "title": "No unused IAM credentials over 90 days",
+      "service": "iam",
+      "region": "us-east-1",
+      "resource_id": "arn:aws:iam::123456789012:user/contractor:password",
+      "status": "FAIL",
+      "severity": "Medium",
+      "risk_score": 9,
+      "iso_controls": [
+        "A.5.18"
+      ],
+      "evidence": {
+        "days_unused": 140
+      },
+      "remediation": "Review dormant IAM users and credentials unused for 90+ days. Deactivate or delete stale access keys and remove console access passwords.",
+      "rationale": "Dormant credentials increase the attack surface and represent unmonitored persistence pathways."
+    },
+    {
+      "check_id": "IAM-007",
+      "title": "No wildcard admin policies attached",
+      "service": "iam",
+      "region": "us-east-1",
+      "resource_id": "arn:aws:iam::123456789012:policy/WildcardAdmin",
+      "status": "FAIL",
+      "severity": "High",
+      "risk_score": 16,
+      "iso_controls": [
+        "A.8.2",
+        "A.5.15"
+      ],
+      "evidence": {
+        "Action": "*",
+        "Resource": "*"
+      },
+      "remediation": "Replace policies with Action: '*' and Resource: '*' with least-privilege scoped permissions tailored to specific service and resource requirements.",
+      "rationale": "Overly permissive admin rights violate the principle of least privilege and amplify blast radius."
+    },
+    {
+      "check_id": "IAM-008",
+      "title": "Policies attached to groups or roles rather than individual users",
+      "service": "iam",
+      "region": "us-east-1",
+      "resource_id": "arn:aws:iam::123456789012:user/dev",
+      "status": "FAIL",
+      "severity": "Medium",
+      "risk_score": 6,
+      "iso_controls": [
+        "A.5.15",
+        "A.5.18"
+      ],
+      "evidence": {
+        "attached_managed_policies": [
+          "PowerUserAccess"
+        ]
+      },
+      "remediation": "Detach inline and managed policies from individual users. Create functional IAM groups or roles and attach policies at the group/role level.",
+      "rationale": "Direct user attachments lead to permission sprawl, inconsistency, and difficult compliance auditing."
+    },
+    {
+      "check_id": "S3-001",
+      "title": "S3 Block Public Access enabled at bucket and account level",
+      "service": "s3",
+      "region": "us-east-1",
+      "resource_id": "arn:aws:s3:::compliance-lab-insecure-123456789012",
+      "status": "FAIL",
+      "severity": "High",
+      "risk_score": 15,
+      "iso_controls": [
+        "A.8.3",
+        "A.5.15"
+      ],
+      "evidence": {
+        "BlockPublicAcls": false
+      },
+      "remediation": "Enable all 4 Block Public Access settings (BlockPublicAcls, IgnorePublicAcls, BlockPublicPolicy, RestrictPublicBuckets) at both account and bucket level.",
+      "rationale": "Public exposure of S3 storage is one of the leading root causes of enterprise data breaches."
+    },
+    {
+      "check_id": "S3-002",
+      "title": "No public S3 ACLs or public bucket policies",
+      "service": "s3",
+      "region": "us-east-1",
+      "resource_id": "arn:aws:s3:::compliance-lab-insecure-123456789012",
+      "status": "FAIL",
+      "severity": "Critical",
+      "risk_score": 20,
+      "iso_controls": [
+        "A.8.3"
+      ],
+      "evidence": {
+        "is_public_policy": true
+      },
+      "remediation": "Remove all ACL grants to 'AuthenticatedUsers' and 'AllUsers'. Revoke public Principal: '*' clauses from bucket policies unless intentionally hosting public static assets.",
+      "rationale": "Public bucket access allows unauthenticated external actors to read, exfiltrate, or tamper with data."
+    },
+    {
+      "check_id": "S3-003",
+      "title": "S3 default encryption enabled (SSE-KMS or SSE-S3)",
+      "service": "s3",
+      "region": "us-east-1",
+      "resource_id": "arn:aws:s3:::compliance-lab-insecure-123456789012",
+      "status": "FAIL",
+      "severity": "Medium",
+      "risk_score": 6,
+      "iso_controls": [
+        "A.8.24"
+      ],
+      "evidence": {
+        "message": "No default encryption"
+      },
+      "remediation": "Enable default encryption on the S3 bucket using AWS KMS (SSE-KMS) or Amazon S3 managed keys (SSE-S3).",
+      "rationale": "Encryption at rest ensures confidentiality and satisfies regulatory compliance standards."
+    },
+    {
+      "check_id": "S3-004",
+      "title": "S3 bucket versioning enabled",
+      "service": "s3",
+      "region": "us-east-1",
+      "resource_id": "arn:aws:s3:::compliance-lab-insecure-123456789012",
+      "status": "FAIL",
+      "severity": "Medium",
+      "risk_score": 6,
+      "iso_controls": [
+        "A.8.13"
+      ],
+      "evidence": {
+        "VersioningStatus": "Disabled"
+      },
+      "remediation": "Enable versioning on the S3 bucket via S3 Console > Bucket Properties > Bucket Versioning.",
+      "rationale": "Versioning protects against accidental deletion, ransomware, and unauthorized data modification."
+    },
+    {
+      "check_id": "S3-005",
+      "title": "S3 server access logging enabled",
+      "service": "s3",
+      "region": "us-east-1",
+      "resource_id": "arn:aws:s3:::compliance-lab-insecure-123456789012",
+      "status": "FAIL",
+      "severity": "Low",
+      "risk_score": 4,
+      "iso_controls": [
+        "A.8.15"
+      ],
+      "evidence": {
+        "message": "Logging disabled"
+      },
+      "remediation": "Enable Server Access Logging on the bucket, directing logs to a dedicated, secured log bucket.",
+      "rationale": "Access logs provide audit trails required for incident investigation and forensic compliance."
+    },
+    {
+      "check_id": "S3-006",
+      "title": "S3 bucket enforces TLS in transit (SecureTransport)",
+      "service": "s3",
+      "region": "us-east-1",
+      "resource_id": "arn:aws:s3:::compliance-lab-insecure-123456789012",
+      "status": "FAIL",
+      "severity": "High",
+      "risk_score": 12,
+      "iso_controls": [
+        "A.8.24",
+        "A.5.14"
+      ],
+      "evidence": {
+        "tls_denied_policy_present": false
+      },
+      "remediation": "Add a bucket policy denying s3:* actions when 'aws:SecureTransport' condition is false.",
+      "rationale": "Enforcing TLS protects data confidentiality and prevents eavesdropping or man-in-the-middle attacks."
+    },
+    {
+      "check_id": "NET-001",
+      "title": "Security groups do not allow unrestricted SSH (22) or RDP (3389)",
+      "service": "ec2",
+      "region": "us-east-1",
+      "resource_id": "arn:aws:ec2:us-east-1:123456789012:security-group/sg-01a2b3c4d",
+      "status": "FAIL",
+      "severity": "High",
+      "risk_score": 16,
+      "iso_controls": [
+        "A.8.20",
+        "A.8.22"
+      ],
+      "evidence": {
+        "open_rules_count": 1,
+        "port": 22
+      },
+      "remediation": "Modify security group rules to restrict ports 22 and 3389 to specific trusted corporate IP CIDRs or migrate management access to AWS Systems Manager Session Manager.",
+      "rationale": "Unrestricted administrative ports on the internet are constant targets for automated brute force and exploit attempts."
+    },
+    {
+      "check_id": "NET-002",
+      "title": "Security groups do not allow unrestricted all-port ingress",
+      "service": "ec2",
+      "region": "us-east-1",
+      "resource_id": "arn:aws:ec2:us-east-1:123456789012:security-group/sg-01a2b3c4d",
+      "status": "FAIL",
+      "severity": "Critical",
+      "risk_score": 20,
+      "iso_controls": [
+        "A.8.20"
+      ],
+      "evidence": {
+        "all_ports_open": true
+      },
+      "remediation": "Remove security group ingress rules allowing all traffic (-1 protocol or port 0-65535) from 0.0.0.0/0 or ::/0.",
+      "rationale": "Opening all ports to the internet exposes internal services, databases, and debugging ports indiscriminately."
+    },
+    {
+      "check_id": "NET-003",
+      "title": "EBS default encryption enabled for account in region",
+      "service": "ec2",
+      "region": "us-east-1",
+      "resource_id": "arn:aws:ec2:us-east-1:123456789012:ebs-encryption",
+      "status": "FAIL",
+      "severity": "Medium",
+      "risk_score": 8,
+      "iso_controls": [
+        "A.8.24"
+      ],
+      "evidence": {
+        "EbsEncryptionByDefault": false
+      },
+      "remediation": "Enable EBS default encryption in the EC2 Console > EC2 Dashboard > Settings > EBS encryption.",
+      "rationale": "EBS default encryption ensures all newly provisioned EBS volumes and snapshots are encrypted at rest."
+    },
+    {
+      "check_id": "NET-004",
+      "title": "All attached and unattached EBS volumes are encrypted",
+      "service": "ec2",
+      "region": "us-east-1",
+      "resource_id": "arn:aws:ec2:us-east-1:123456789012:volume/vol-0987654321",
+      "status": "PASS",
+      "severity": "Medium",
+      "risk_score": 8,
+      "iso_controls": [
+        "A.8.24"
+      ],
+      "evidence": {
+        "Encrypted": true
+      },
+      "remediation": "Create snapshots of unencrypted EBS volumes, copy the snapshots with encryption enabled, and create new encrypted volumes to replace unencrypted volumes.",
+      "rationale": "Unencrypted volumes risk data exposure if underlying storage hardware is compromised or misplaced."
+    },
+    {
+      "check_id": "NET-005",
+      "title": "VPC Flow Logs enabled for all VPCs",
+      "service": "ec2",
+      "region": "us-east-1",
+      "resource_id": "arn:aws:ec2:us-east-1:123456789012:vpc/vpc-0a1b2c3d4e5f",
+      "status": "FAIL",
+      "severity": "Medium",
+      "risk_score": 9,
+      "iso_controls": [
+        "A.8.15",
+        "A.8.16"
+      ],
+      "evidence": {
+        "FlowLogsActive": false
+      },
+      "remediation": "Create Flow Logs for all VPCs sending accepted and rejected IP traffic telemetry to CloudWatch Logs or S3.",
+      "rationale": "Flow logs provide visibility into network anomalies, communication patterns, and potential breach activity."
+    },
+    {
+      "check_id": "LOG-001",
+      "title": "CloudTrail multi-region trail enabled and logging",
+      "service": "logging",
+      "region": "us-east-1",
+      "resource_id": "arn:aws:cloudtrail:us-east-1:123456789012:trail/MainTrail",
+      "status": "PASS",
+      "severity": "High",
+      "risk_score": 16,
+      "iso_controls": [
+        "A.8.15"
+      ],
+      "evidence": {
+        "IsLogging": true,
+        "IsMultiRegionTrail": true
+      },
+      "remediation": "Configure at least one multi-region CloudTrail trail logging management events with logging status active.",
+      "rationale": "Without comprehensive CloudTrail logging, administrative actions and potential attacks cannot be audited."
+    },
+    {
+      "check_id": "LOG-002",
+      "title": "CloudTrail log file validation enabled",
+      "service": "logging",
+      "region": "us-east-1",
+      "resource_id": "arn:aws:cloudtrail:us-east-1:123456789012:trail/MainTrail",
+      "status": "PASS",
+      "severity": "Medium",
+      "risk_score": 8,
+      "iso_controls": [
+        "A.8.15",
+        "A.5.33"
+      ],
+      "evidence": {
+        "LogFileValidationEnabled": true
+      },
+      "remediation": "Enable log file validation on all trails to cryptographically verify log file integrity.",
+      "rationale": "Log validation uses digest files and digital signatures to ensure audit trails have not been modified or deleted."
+    },
+    {
+      "check_id": "LOG-003",
+      "title": "AWS Config configuration recorder enabled",
+      "service": "logging",
+      "region": "us-east-1",
+      "resource_id": "arn:aws:config:us-east-1:123456789012:recorder",
+      "status": "FAIL",
+      "severity": "Medium",
+      "risk_score": 9,
+      "iso_controls": [
+        "A.8.9"
+      ],
+      "evidence": {
+        "message": "No Config recorder configured"
+      },
+      "remediation": "Enable AWS Config recorder and delivery channel in each active region to record resource configurations.",
+      "rationale": "AWS Config tracks historical resource configurations and configuration drift for compliance validation."
+    },
+    {
+      "check_id": "LOG-004",
+      "title": "Amazon GuardDuty detector enabled",
+      "service": "logging",
+      "region": "us-east-1",
+      "resource_id": "arn:aws:guardduty:us-east-1:123456789012:detector/det-123",
+      "status": "PASS",
+      "severity": "High",
+      "risk_score": 12,
+      "iso_controls": [
+        "A.8.16"
+      ],
+      "evidence": {
+        "Status": "ENABLED"
+      },
+      "remediation": "Enable GuardDuty across all active regions to leverage machine learning threat detection on CloudTrail, VPC, and DNS logs.",
+      "rationale": "GuardDuty provides continuous intelligent threat detection to identify compromised credentials and anomalous behaviors."
+    },
+    {
+      "check_id": "KMS-001",
+      "title": "Customer managed KMS keys have annual rotation enabled",
+      "service": "kms",
+      "region": "us-east-1",
+      "resource_id": "kms:customer-keys",
+      "status": "PASS",
+      "severity": "Medium",
+      "risk_score": 6,
+      "iso_controls": [
+        "A.8.24"
+      ],
+      "evidence": {
+        "message": "All keys have rotation enabled"
+      },
+      "remediation": "Enable automatic key rotation for all active customer-managed symmetric KMS keys in KMS Console or via CLI.",
+      "rationale": "Annual cryptographic key rotation limits the volume of ciphertext encrypted under a single key version."
+    },
+    {
+      "check_id": "RDS-001",
+      "title": "RDS database instances have storage encryption enabled",
+      "service": "rds",
+      "region": "us-east-1",
+      "resource_id": "rds:instances",
+      "status": "PASS",
+      "severity": "Medium",
+      "risk_score": 8,
+      "iso_controls": [
+        "A.8.24"
+      ],
+      "evidence": {
+        "message": "All storage encrypted"
+      },
+      "remediation": "Enable KMS encryption for all RDS databases. Note that unencrypted instances must be migrated via snapshot copy.",
+      "rationale": "Database storage encryption ensures data, automated backups, and read replicas are protected at rest."
+    },
+    {
+      "check_id": "RDS-002",
+      "title": "RDS instances are not publicly accessible",
+      "service": "rds",
+      "region": "us-east-1",
+      "resource_id": "rds:instances",
+      "status": "PASS",
+      "severity": "High",
+      "risk_score": 16,
+      "iso_controls": [
+        "A.8.20",
+        "A.8.3"
+      ],
+      "evidence": {
+        "message": "No public databases"
+      },
+      "remediation": "Modify RDS instances to set 'PubliclyAccessible' to false and place databases inside private VPC subnets.",
+      "rationale": "Databases exposed directly to the public internet invite continuous brute-force attacks and injection attempts."
+    },
+    {
+      "check_id": "RDS-003",
+      "title": "RDS automated backup retention period is at least 7 days",
+      "service": "rds",
+      "region": "us-east-1",
+      "resource_id": "rds:instances",
+      "status": "PASS",
+      "severity": "Medium",
+      "risk_score": 8,
+      "iso_controls": [
+        "A.8.13",
+        "A.5.30"
+      ],
+      "evidence": {
+        "message": "Retention >= 7 days"
+      },
+      "remediation": "Modify RDS instance backup configuration to set backup retention period between 7 and 35 days.",
+      "rationale": "Inadequate backup retention hampers disaster recovery and business continuity objectives."
+    },
+    {
+      "check_id": "RDS-004",
+      "title": "RDS production instances configured with Multi-AZ deployment",
+      "service": "rds",
+      "region": "us-east-1",
+      "resource_id": "rds:instances",
+      "status": "PASS",
+      "severity": "Medium",
+      "risk_score": 6,
+      "iso_controls": [
+        "A.8.14",
+        "A.5.30"
+      ],
+      "evidence": {
+        "message": "Multi-AZ configured"
+      },
+      "remediation": "Enable Multi-AZ deployment for production RDS databases to maintain synchronous standby replicas across availability zones.",
+      "rationale": "Single-AZ deployments fail to meet high availability and business continuity requirements during infrastructure failures."
+    }
+  ]
+}
